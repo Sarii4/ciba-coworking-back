@@ -1,5 +1,5 @@
 
-package com.cibacoworking.cibacoworking.models;
+package com.cibacoworking.cibacoworking.models.entities;
 
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.models;
+package com.cibacoworking.cibacoworking.models.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

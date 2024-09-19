@@ -1,49 +1,31 @@
+package com.cibacoworking.cibacoworking.models.dtos;
 
-package com.cibacoworking.cibacoworking.models;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AdminUserDTO {
     private int id;
-
-    @Column(length = 50, nullable = false)
     private String name;
-
-    @Column(length = 50, nullable = false, unique = true)
     private String email;
-
-    @Column(length = 10, nullable = false)
-    private String password;
-
-    @Column(length = 15)
+    private String password; // Información sensible solo para el Admin
     private String phone;
-
-    @Column(name = "project_name", length = 50)
     private String projectName;
+    private String role; 
 
-    @ManyToOne
-    @JoinColumn(name = "rol_id", nullable = false)
-    private Role role;
+    public AdminUserDTO() {}
 
-    public User() {}
+    public AdminUserDTO(int id, String name, String email, String password, String phone, String projectName, String role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.projectName = projectName;
+        this.role = role;
+    }
 
     public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -87,11 +69,11 @@ public class User {
         this.projectName = projectName;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }
