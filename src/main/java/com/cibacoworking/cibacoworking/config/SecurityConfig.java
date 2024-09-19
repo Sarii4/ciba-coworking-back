@@ -13,9 +13,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) 
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll());
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().hasRole("ADMIN"))
+            .formLogin(form -> form
+                .loginPage("/api/auth/login")
+                .permitAll())
+            .logout(logout -> logout
+                .logoutUrl("/api/auth/logout")
+                .permitAll());
 
         return http.build();
     }
