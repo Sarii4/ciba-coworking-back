@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.models;
+package com.cibacoworking.cibacoworking.models.entities;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
