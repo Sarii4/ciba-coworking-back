@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.security;
+/* package com.cibacoworking.cibacoworking.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -57,3 +57,4 @@ public class JwtUtil {
                 .getBody();
     }
 }
+ */

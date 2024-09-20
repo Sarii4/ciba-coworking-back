@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.controllers;
+/* package com.cibacoworking.cibacoworking.controllers;
 
 import com.cibacoworking.cibacoworking.models.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,3 +35,4 @@ public class AuthController {
         return ResponseEntity.ok("Tancament de sessió correcte");
     }
 }
+ */
