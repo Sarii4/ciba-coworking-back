@@ -1,6 +1,6 @@
 package com.cibacoworking.cibacoworking.services;
 
-import com.cibacoworking.cibacoworking.models.User;
+import com.cibacoworking.cibacoworking.models.entities.User;  
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
             .withUsername(user.getEmail())
             .password(user.getPassword())
-            .authorities(user.getRole().getRol())  // Cambiado a getRol()
+            .authorities(user.getRole().getRol())  
             .accountExpired(false)
             .accountLocked(false)
             .credentialsExpired(false)
@@ -30,3 +30,4 @@ public class CustomUserDetailsService implements UserDetailsService {
             .build();
     }
 }
+
