@@ -5,10 +5,14 @@ import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 
 @Service
 public class ReservationService {
@@ -57,17 +61,16 @@ public class ReservationService {
             Reservation updatedReservation = reservationRepository.save(existingReservation);
             return dtoMapper.convertToDTO(updatedReservation);
         }
-        return null; // O lanzar una excepción personalizada
+        return null; // O lanzar una excepción personalizada VERIFICAR
     }
 
-    // Eliminar una reserva
-    public boolean deleteReservation(int id) {
+    // Eliminar una reserva 
+    public ResponseEntity<Object> deleteReservation(int id) throws CibaCoworkingException {
         Optional<Reservation> reservationOpt = reservationRepository.findById(id);
-        if (reservationOpt.isPresent()) {
-            reservationRepository.delete(reservationOpt.get());
-            return true;
+        if (!reservationOpt.isPresent()) {
+            throw new CibaCoworkingException("No s'ha trobat la reserva", HttpStatus.CONFLICT);
         }
-        return false;
+        reservationRepository.delete(reservationOpt.get());
+        return new ResponseEntity<>("S'ha eliminat amb èxit", HttpStatus.OK);
     }
 }
-//EN TEORIA ESTA OK

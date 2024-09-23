@@ -10,24 +10,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
+import com.cibacoworking.cibacoworking.config.ConstantsSecurity;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/reservations")
 public class ReservationController {
 
-    /* @Autowired
-    private DTOMapper dtoMapper;
-
-    @Autowired
-    private ReservationRepository reservationRepository;  */
-
-    @Autowired
+   @Autowired
     private ReservationService reservationService;
 
+    //User reservations
+    
+    //Crear reserva por usuario
+    @PostMapping(ConstantsSecurity.CREATE_RESERVATION_BY_USER)
+    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
+        ReservationDTO savedReservation = reservationService.createReservation(reservationDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
+    }
 
-    //Ver todas las reservas de un usuario
-     @GetMapping("/user/{userId}")
+    //Ver todas las reservas por usuario
+     @GetMapping(ConstantsSecurity.GET_RESERVATIONS_BY_USER)
     public ResponseEntity<List<ReservationDTO>> getReservationsByUser(@PathVariable int userId) {
         List<ReservationDTO> reservationDTOs = reservationService.getReservationsByUser(userId);
         return ResponseEntity.ok(reservationDTOs);
@@ -57,12 +61,7 @@ public class ReservationController {
         Reservation savedReservation = reservationRepository.save(reservation);
         return dtoMapper.convertToDTO(savedReservation);
     } */
-    @PostMapping
-    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
-        ReservationDTO savedReservation = reservationService.createReservation(reservationDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
-    }
-
+   
     //Actualizar reserva
     @PutMapping("/{id}")
     public ResponseEntity<ReservationDTO> updateReservation(@PathVariable int id, @RequestBody ReservationDTO reservationDTO) {
@@ -75,12 +74,9 @@ public class ReservationController {
 
     //Eliminar reserva
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable int id) {
-        boolean deleted = reservationService.deleteReservation(id);
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> deleteReservation(@PathVariable int id) throws CibaCoworkingException {
+       return reservationService.deleteReservation(id);
+
     }
 }
 //En teoria está ok
