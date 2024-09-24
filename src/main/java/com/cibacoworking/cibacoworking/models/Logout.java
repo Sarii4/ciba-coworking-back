@@ -9,7 +9,6 @@ public class Logout {
 
     public Logout(String message, boolean success) {
         this.message = message;
-        this.success = success;
     }
 
     public String getMessage() {

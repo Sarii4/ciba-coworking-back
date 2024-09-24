@@ -15,9 +15,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import io.jsonwebtoken.ExpiredJwtException;
 import com.cibacoworking.cibacoworking.security.JwtUtil;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = Logger.getLogger(JwtAuthenticationFilter.class.getName());
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
     private final JwtConfig jwtConfig;
@@ -30,18 +34,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, java.io.IOException {
+            throws ServletException, IOException {
         final String token = getTokenFromRequest(request);
 
         if (token != null && StringUtils.hasText(token)) {
             String username;
             try {
                 username = jwtUtil.extractUsername(token);
+                logger.info("Token vàlid per l'usuari: " + username);
             } catch (ExpiredJwtException e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
+                logger.warning("Token expirat per l'usuari: " + e.getMessage());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirat");
                 return;
             } catch (Exception e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
+                logger.warning("Token invàlid: " + e.getMessage());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token invàlid");
                 return;
             }
 
@@ -51,7 +58,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } else {
+                logger.warning("Token no vàlid per l'usuari: " + username);
             }
+        } else {
+            logger.warning("Token no proporcionat");
         }
 
         filterChain.doFilter(request, response);

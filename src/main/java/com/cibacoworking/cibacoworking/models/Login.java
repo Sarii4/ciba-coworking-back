@@ -4,11 +4,9 @@ import com.cibacoworking.cibacoworking.models.entities.User;
 
 public class Login {
     
-    private User user;
-    private String token;
-    private boolean authenticated;
-
-    public Login() {}
+    private final User user;
+    private final String token;
+    private final boolean authenticated;
 
     public Login(User user, String token, boolean authenticated) {
         this.user = user;
@@ -16,28 +14,15 @@ public class Login {
         this.authenticated = authenticated;
     }
 
-   
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getToken() {
         return token;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public boolean isAuthenticated() {
         return authenticated;
-    }
-
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
     }
 }

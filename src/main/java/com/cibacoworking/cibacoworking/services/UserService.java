@@ -1,11 +1,14 @@
 package com.cibacoworking.cibacoworking.services;
 
+import com.cibacoworking.cibacoworking.models.LoginRequest;
 import com.cibacoworking.cibacoworking.models.entities.User;
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
+import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +16,8 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -28,5 +33,19 @@ public class UserService implements UserDetailsService {
                 .credentialsExpired(false)
                 .disabled(false)
                 .build();
+    }
+
+    public User authenticate(LoginRequest loginRequest) throws CibaCoworkingException {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CibaCoworkingException("Credenciales inválidas."));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new CibaCoworkingException("Credenciales inválidas.");
+        }
+
+        return user; // Retorna el usuario autenticado
     }
 }
