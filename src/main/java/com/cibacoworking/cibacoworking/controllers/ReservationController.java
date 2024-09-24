@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.config.ConstantsSecurity;
-
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -25,16 +25,36 @@ public class ReservationController {
     
     //Crear reserva por usuario
     @PostMapping(ConstantsSecurity.CREATE_RESERVATION_BY_USER)
-    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
+    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) throws CibaCoworkingException {
         ReservationDTO savedReservation = reservationService.createReservation(reservationDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
     }
 
+      // Crear reserva a largo plazo por administrador
+      @PostMapping(ConstantsSecurity.CREATE_LONG_TERM_RESERVATION_ADMIN)
+      public ResponseEntity<ReservationDTO> createLongTermReservation(
+              @RequestBody ReservationDTO reservationDTO) throws CibaCoworkingException {
+          ReservationDTO savedReservation = reservationService.createLongTermReservation(reservationDTO);
+          return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
+      }
+  
+
     //Ver todas las reservas por usuario
      @GetMapping(ConstantsSecurity.GET_RESERVATIONS_BY_USER)
-    public ResponseEntity<List<ReservationDTO>> getReservationsByUser(@PathVariable int userId) {
+    public ResponseEntity<List<ReservationDTO>> getReservationsByUser(@PathVariable int userId) throws CibaCoworkingException {
         List<ReservationDTO> reservationDTOs = reservationService.getReservationsByUser(userId);
         return ResponseEntity.ok(reservationDTOs);
+    }
+
+    // Obtener espacios por ID y fechas concretas
+    @GetMapping(ConstantsSecurity.GET_SPACES_BY_ID_AND_DATE)
+    public ResponseEntity<List<ReservationDTO>> getSpacesByIdAndDate(
+            @PathVariable int spaceId,
+            @RequestParam("startDate") LocalDate startDate,
+            @RequestParam("endDate") LocalDate endDate) throws CibaCoworkingException {
+        
+        List<ReservationDTO> availableSpaces = reservationService.getSpacesByIdAndDate(spaceId, startDate, endDate);
+        return ResponseEntity.ok(availableSpaces);
     }
     
    /*  @GetMapping("/{id}")
@@ -44,7 +64,7 @@ public class ReservationController {
     } */
 
     //Ver reserva específica por Id
-    @GetMapping("/{id}")
+   /*  @GetMapping("/{id}")
     public ResponseEntity<ReservationDTO> getReservationById(@PathVariable int id) {
         ReservationDTO reservationDTO = reservationService.getReservationById(id);
         if (reservationDTO == null) {
@@ -52,7 +72,7 @@ public class ReservationController {
         }
         return ResponseEntity.ok(reservationDTO);
     }
-
+ */
     //Crear reserva
 
    /*  @PostMapping
@@ -63,20 +83,23 @@ public class ReservationController {
     } */
    
     //Actualizar reserva
-    @PutMapping("/{id}")
-    public ResponseEntity<ReservationDTO> updateReservation(@PathVariable int id, @RequestBody ReservationDTO reservationDTO) {
-        ReservationDTO updatedReservation = reservationService.updateReservation(id, reservationDTO);
-        if (updatedReservation == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedReservation);
+    @PutMapping(ConstantsSecurity.UPDATE_RESERVATION)
+    public ResponseEntity<ReservationDTO> updateReservation(
+            @PathVariable int reservationId, 
+            @RequestBody ReservationDTO reservationDTO) throws CibaCoworkingException {
+        
+        ReservationDTO updatedReservation = reservationService.updateReservation(reservationId, reservationDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedReservation);
     }
+  
 
     //Eliminar reserva
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteReservation(@PathVariable int id) throws CibaCoworkingException {
-       return reservationService.deleteReservation(id);
-
+    @DeleteMapping(ConstantsSecurity.DELETE_RESERVATION)
+    public ResponseEntity<String> deleteReservation(@PathVariable int reservationId) throws CibaCoworkingException {
+        reservationService.deleteReservation(reservationId);
+        return ResponseEntity.ok("S'ha eliminat amb èxit");
     }
+    
+
 }
 //En teoria está ok
