@@ -21,7 +21,7 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
@@ -31,6 +31,9 @@ public class SecurityConfig {
                 .logoutUrl("/api/auth/logout")
                 .permitAll())
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Añadir filtro JWT
+
+        // Configuración CORS
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
@@ -42,12 +45,11 @@ public class SecurityConfig {
         return authenticationManagerBuilder.build();
     }
 
-    // Configuración CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("*"); 
+        configuration.addAllowedOrigin("http://localhost:5173"); 
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
 
