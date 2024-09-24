@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import io.jsonwebtoken.ExpiredJwtException;
 import com.cibacoworking.cibacoworking.security.JwtUtil;
+import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -33,7 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, 
+                                    @NonNull HttpServletResponse response, 
+                                    @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         final String token = getTokenFromRequest(request);
 
@@ -41,14 +44,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String username;
             try {
                 username = jwtUtil.extractUsername(token);
-                logger.info("Token vàlid per l'usuari: " + username);
+                logger.info("Token válido para el usuario: " + username);
             } catch (ExpiredJwtException e) {
-                logger.warning("Token expirat per l'usuari: " + e.getMessage());
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirat");
+                logger.warning("Token expirado para el usuario: " + e.getMessage());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
                 return;
             } catch (Exception e) {
-                logger.warning("Token invàlid: " + e.getMessage());
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token invàlid");
+                logger.warning("Token inválido: " + e.getMessage());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
                 return;
             }
 
@@ -59,10 +62,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             } else {
-                logger.warning("Token no vàlid per l'usuari: " + username);
+                logger.warning("Token no válido para el usuario: " + username);
             }
         } else {
-            logger.warning("Token no proporcionat");
+            logger.warning("Token no proporcionado");
         }
 
         filterChain.doFilter(request, response);

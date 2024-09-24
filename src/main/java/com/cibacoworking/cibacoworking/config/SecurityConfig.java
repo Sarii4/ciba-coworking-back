@@ -1,5 +1,6 @@
 package com.cibacoworking.cibacoworking.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,12 +26,17 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/login", "/api/auth/logout", "/api/auth/requestLogin").permitAll() // Permitir acceso sin autenticación
+                .requestMatchers("/api/auth/login", "/api/auth/logout", "/api/auth/requestLogin", "/api/users").permitAll() // Permitir acceso sin autenticación
                 .anyRequest().hasRole("ADMIN")) // Proteger el resto de las rutas
             .logout(logout -> logout
                 .logoutUrl("/api/auth/logout")
                 .permitAll())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Añadir filtro JWT
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Añadir filtro JWT
+            .exceptionHandling(exception -> 
+                exception.authenticationEntryPoint((request, response, authException) -> {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado");
+                })
+            );
 
         // Configuración CORS
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));

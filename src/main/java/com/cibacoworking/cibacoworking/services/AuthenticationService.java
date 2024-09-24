@@ -23,14 +23,14 @@ public class AuthenticationService {
         // Intenta autenticar al usuario con la contraseña
         try {
             authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()) 
             );
         } catch (Exception e) {
             throw new Exception("Autenticación fallida: " + e.getMessage());
         }
         
         // Si la autenticación es exitosa, carga los detalles del usuario
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail()); 
 
         // Genera el token
         return jwtUtil.generateToken(userDetails.getUsername());

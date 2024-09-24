@@ -25,9 +25,9 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
+                .withUsername(user.getEmail())  // El email se usa como "username"
                 .password(user.getPassword())
-                .authorities(user.getRole().getRol())
+                .authorities(user.getRole().getRol())  // Asegúrate de que el rol se devuelve correctamente
                 .accountExpired(false)
                 .accountLocked(false)
                 .credentialsExpired(false)
@@ -46,6 +46,6 @@ public class UserService implements UserDetailsService {
             throw new CibaCoworkingException("Credenciales inválidas.");
         }
 
-        return user; // Retorna el usuario autenticado
+        return user;  // Retorna el usuario autenticado
     }
 }
