@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.controllers;
+/* package com.cibacoworking.cibacoworking.controllers;
 
 import com.cibacoworking.cibacoworking.config.security.JwtUtil;
 import com.cibacoworking.cibacoworking.models.dtos.auth.Login; 
@@ -58,3 +58,4 @@ public class AuthController {
         return ResponseEntity.ok("Logout successful");
     }
 }
+ */

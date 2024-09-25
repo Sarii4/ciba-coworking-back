@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.models.dtos.auth;
+/* package com.cibacoworking.cibacoworking.models;
 
 public class LoginRequest {
     private String email; 
@@ -24,3 +24,4 @@ public class LoginRequest {
         this.password = password;
     }
 }
+ */

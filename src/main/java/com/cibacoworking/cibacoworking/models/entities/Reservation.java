@@ -30,7 +30,7 @@ public class Reservation {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Column(name = "start_time", nullable = false)
+    @Column(name = "start_time", nullable = false) //revisar formato LocalTime y LocalDate también
     private LocalTime startTime;
 
     @Column(name = "end_time", nullable = false)
