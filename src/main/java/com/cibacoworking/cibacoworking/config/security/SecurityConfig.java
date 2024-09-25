@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config;
+package com.cibacoworking.cibacoworking.config.security;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;

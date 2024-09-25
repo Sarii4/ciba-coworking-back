@@ -1,7 +1,7 @@
 package com.cibacoworking.cibacoworking.controllers;
 
-import com.cibacoworking.cibacoworking.models.Login;
-import com.cibacoworking.cibacoworking.models.LoginRequest;
+import com.cibacoworking.cibacoworking.models.dtos.auth.LoginRequest;
+import com.cibacoworking.cibacoworking.models.dtos.auth.LoginResponse; 
 import com.cibacoworking.cibacoworking.models.BodyErrorMessage;
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.entities.User;
@@ -39,7 +39,7 @@ public class AuthController {
         try {
             User user = userService.authenticate(loginRequest); 
             String token = generateToken(user); 
-            Login loginResponse = new Login(user, token, true);
+            LoginResponse loginResponse = new LoginResponse(token, user.toUserDTO(), true); // Usa LoginResponse
             logger.info("L'usuari " + user.getEmail() + " ha iniciat sessió correctament.");
             return ResponseEntity.ok(loginResponse);
         } catch (CibaCoworkingException e) {
@@ -58,11 +58,9 @@ public class AuthController {
     }
 
     private String generateToken(User user) {
-    
         Claims claims = Jwts.claims().setSubject(user.getEmail());
         claims.put("role", user.getRole().getRol()); 
 
-     
         SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes()); 
 
         return Jwts.builder()

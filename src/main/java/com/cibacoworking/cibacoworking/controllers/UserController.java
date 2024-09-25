@@ -1,13 +1,14 @@
 package com.cibacoworking.cibacoworking.controllers;
 
-import com.cibacoworking.cibacoworking.models.Login;
-import com.cibacoworking.cibacoworking.models.LoginRequest;
+import com.cibacoworking.cibacoworking.config.security.JwtUtil;
+import com.cibacoworking.cibacoworking.models.dtos.auth.Login; 
 import com.cibacoworking.cibacoworking.models.dtos.AdminUserDTO;
 import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
+import com.cibacoworking.cibacoworking.models.dtos.auth.LoginRequest;
 import com.cibacoworking.cibacoworking.models.entities.User;
 import com.cibacoworking.cibacoworking.services.DTOMapper;
 import com.cibacoworking.cibacoworking.services.UserService;
-import com.cibacoworking.cibacoworking.security.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,7 +87,6 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
-    
         return ResponseEntity.ok("Logout successful");
     }
 }

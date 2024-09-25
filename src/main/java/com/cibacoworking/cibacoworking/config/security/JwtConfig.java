@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config;
+package com.cibacoworking.cibacoworking.config.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
 package com.cibacoworking.cibacoworking.services;
 
-import com.cibacoworking.cibacoworking.models.LoginRequest;
+import com.cibacoworking.cibacoworking.models.dtos.auth.LoginRequest;
 import com.cibacoworking.cibacoworking.models.entities.User;
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;

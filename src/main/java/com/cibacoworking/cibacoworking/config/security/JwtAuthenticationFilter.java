@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config;
+package com.cibacoworking.cibacoworking.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,8 +12,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import io.jsonwebtoken.ExpiredJwtException;
-import com.cibacoworking.cibacoworking.security.JwtUtil;
+
 import org.springframework.lang.NonNull;
 
 import java.io.IOException;

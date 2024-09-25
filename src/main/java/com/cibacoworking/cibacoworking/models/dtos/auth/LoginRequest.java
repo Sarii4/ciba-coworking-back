@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.models;
+package com.cibacoworking.cibacoworking.models.dtos.auth;
 
 public class LoginRequest {
     private String email; 
