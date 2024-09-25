@@ -1,7 +1,7 @@
-/* package com.cibacoworking.cibacoworking.controllers;
+package com.cibacoworking.cibacoworking.controllers;
 
 import com.cibacoworking.cibacoworking.config.security.JwtUtil;
-import com.cibacoworking.cibacoworking.models.dtos.auth.Login; 
+import com.cibacoworking.cibacoworking.models.dtos.auth.LoginResponse; 
 import com.cibacoworking.cibacoworking.models.dtos.auth.LoginRequest;
 import com.cibacoworking.cibacoworking.models.entities.User;
 import com.cibacoworking.cibacoworking.services.UserService;
@@ -29,7 +29,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<Login> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             // Intentar autenticar al usuario
             authenticationManager.authenticate(
@@ -48,8 +48,8 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // Crear una respuesta de inicio de sesión
-        Login loginResponse = new Login(user, token, true);
+        // Crear una respuesta de inicio de sesión con el token
+        LoginResponse loginResponse = new LoginResponse(token);
         return ResponseEntity.ok(loginResponse);
     }
 
@@ -58,4 +58,3 @@ public class AuthController {
         return ResponseEntity.ok("Logout successful");
     }
 }
- */
