@@ -1,22 +1,19 @@
-package com.cibacoworking.cibacoworking.models;
+package com.cibacoworking.cibacoworking.models.dtos.auth;
 
 import com.cibacoworking.cibacoworking.models.entities.User;
 
 public class Login {
-    
     private User user;
     private String token;
-    private boolean authenticated;
+    private boolean success;
 
-    public Login() {}
-
-    public Login(User user, String token, boolean authenticated) {
+    public Login(User user, String token, boolean success) {
         this.user = user;
         this.token = token;
-        this.authenticated = authenticated;
+        this.success = success;
     }
 
-   
+
     public User getUser() {
         return user;
     }
@@ -33,11 +30,11 @@ public class Login {
         this.token = token;
     }
 
-    public boolean isAuthenticated() {
-        return authenticated;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

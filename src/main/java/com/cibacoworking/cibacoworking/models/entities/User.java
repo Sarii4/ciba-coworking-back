@@ -1,6 +1,6 @@
-
 package com.cibacoworking.cibacoworking.models.entities;
 
+import com.cibacoworking.cibacoworking.models.dtos.UserDTO; 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -43,7 +43,7 @@ public class User {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -93,5 +93,9 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public UserDTO toUserDTO() {
+        return new UserDTO(this.id, this.name, this.email, this.phone, this.projectName, this.role.getRol());
     }
 }

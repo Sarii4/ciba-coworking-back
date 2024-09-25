@@ -1,8 +1,8 @@
-package com.cibacoworking.cibacoworking.models;
+/* package com.cibacoworking.cibacoworking.models;
 
 public class LoginRequest {
-    private String email;
-    private String password;
+    private String email; 
+    private String password; 
 
     public String getEmail() {
         return email;
@@ -20,3 +20,4 @@ public class LoginRequest {
         this.password = password;
     }
 }
+ */

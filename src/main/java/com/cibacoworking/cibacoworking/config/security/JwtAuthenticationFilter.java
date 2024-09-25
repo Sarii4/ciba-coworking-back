@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config;
+/* package com.cibacoworking.cibacoworking.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,12 +12,18 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import io.jsonwebtoken.ExpiredJwtException;
-import com.cibacoworking.cibacoworking.security.JwtUtil;
+
+import org.springframework.lang.NonNull;
+
+import java.io.IOException;
+import java.util.logging.Logger;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = Logger.getLogger(JwtAuthenticationFilter.class.getName());
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
     private final JwtConfig jwtConfig;
@@ -29,18 +35,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, java.io.IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, 
+                                    @NonNull HttpServletResponse response, 
+                                    @NonNull FilterChain filterChain)
+            throws ServletException, IOException {
         final String token = getTokenFromRequest(request);
 
         if (token != null && StringUtils.hasText(token)) {
             String username;
             try {
                 username = jwtUtil.extractUsername(token);
+                logger.info("Token válido para el usuario: " + username);
             } catch (ExpiredJwtException e) {
+                logger.warning("Token expirado para el usuario: " + e.getMessage());
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
                 return;
             } catch (Exception e) {
+                logger.warning("Token inválido: " + e.getMessage());
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
                 return;
             }
@@ -51,7 +62,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } else {
+                logger.warning("Token no válido para el usuario: " + username);
             }
+        } else {
+            logger.warning("Token no proporcionado");
         }
 
         filterChain.doFilter(request, response);
@@ -65,3 +80,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 }
+ */
