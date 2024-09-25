@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.controllers;
+/* package com.cibacoworking.cibacoworking.controllers;
 
 import com.cibacoworking.cibacoworking.models.dtos.auth.LoginRequest;
 import com.cibacoworking.cibacoworking.models.dtos.auth.LoginResponse; 
@@ -71,3 +71,4 @@ public class AuthController {
                 .compact();
     }
 }
+ */
