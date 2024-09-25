@@ -117,38 +117,38 @@ public class DTOMapper {
 
     //Convertimos Reservation a ReservationDTO
     public ReservationDTO convertToDTO(Reservation reservation) {
-        return new ReservationDTO(
+        return new ReservationDTO (
             reservation.getId(), 
-            reservation.getSpace().getId(), 
-            reservation.getUser().getId(), 
             reservation.getStartDate(), 
             reservation.getEndDate(), 
             reservation.getStartTime(), 
-            reservation.getEndTime()
+            reservation.getEndTime(),
+            convertToDTO(reservation.getUser()),
+            convertToDTO(reservation.getSpace())
         );
     }
 
     //Convertimos ReservationDTO a Reservation
     public Reservation convertToEntity(ReservationDTO reservationDTO) {
         Reservation reservation = new Reservation();
-        reservation.setId(reservationDTO.getId());
+        //reservation.setId(reservationDTO.getId());
         reservation.setStartDate(reservationDTO.getStartDate());
         reservation.setEndDate(reservationDTO.getEndDate());
         reservation.setStartTime(reservationDTO.getStartTime());
         reservation.setEndTime(reservationDTO.getEndTime());
 
-        Optional<Space> spaceOpt = spaceRepository.findById(reservationDTO.getSpaceId());
+        Optional<Space> spaceOpt = spaceRepository.findById(reservationDTO.getSpaceDTO().getId());
         if (spaceOpt.isPresent()) {
             reservation.setSpace(spaceOpt.get());
         } else {
-            throw new IllegalArgumentException("Space no encontrado con id: " + reservationDTO.getSpaceId());
+            throw new IllegalArgumentException("Space no encontrado con id: " + reservationDTO.getSpaceDTO().getId());
         }
 
-        Optional<User> userOpt = userRepository.findById(reservationDTO.getUserId());
+        Optional<User> userOpt = userRepository.findById(reservationDTO.getUserDTO().getId());
         if (userOpt.isPresent()) {
             reservation.setUser(userOpt.get());
         } else {
-            throw new IllegalArgumentException("User no encontrado con id: " + reservationDTO.getUserId());
+            throw new IllegalArgumentException("User no encontrado con id: " + reservationDTO.getUserDTO().getId());
         }
 
         return reservation;
@@ -159,4 +159,3 @@ public class DTOMapper {
         return reservationRepository.save(reservation);
     }
 }
-//En teoría está OK

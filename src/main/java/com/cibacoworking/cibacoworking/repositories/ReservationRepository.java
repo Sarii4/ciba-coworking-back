@@ -11,10 +11,12 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
     List<Reservation> findByUserId(int userId);
-     @Query("SELECT r FROM Reservation r WHERE r.space.id = :spaceId AND r.startDate >= :startDate AND r.endDate <= :endDate")
-    List<Reservation> findAvailableSpacesByIdAndDate(
+
+    @Query("SELECT r FROM Reservation r WHERE r.space.id = :spaceId AND r.startDate >= :startDate AND r.endDate <= :endDate")
+    List<Reservation> findReservationsBySpaceAndDate(
             @Param("spaceId") int spaceId, 
             @Param("startDate") LocalDate startDate, 
             @Param("endDate") LocalDate endDate
     );
+
 }

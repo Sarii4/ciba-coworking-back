@@ -26,7 +26,6 @@ public class ReservationService {
 
      // Crear una reserva a largo plazo por administrador
      public ReservationDTO createLongTermReservation(ReservationDTO reservationDTO) throws CibaCoworkingException {
-        // Lógica para manejar reservas de largo plazo
         if (reservationDTO.getStartDate().isAfter(reservationDTO.getEndDate())) {
             throw new CibaCoworkingException("La data d'inici no pot ser posterior a la data de finalització", HttpStatus.BAD_REQUEST);
         }
@@ -35,13 +34,17 @@ public class ReservationService {
         return dtoMapper.convertToDTO(savedReservation);
     }
 
-    // Obtener espacios por ID y fechas concretas
-    public List<ReservationDTO> getSpacesByIdAndDate(int spaceId, LocalDate startDate, LocalDate endDate) throws CibaCoworkingException {
-        List<Reservation> availableSpaces = reservationRepository.findAvailableSpacesByIdAndDate(spaceId, startDate, endDate);
-        return availableSpaces.stream()
+    // Obtener reservas por ID de espacio y fechas concretas
+    public List<ReservationDTO> getReservationsBySpaceAndDate(int spaceId, LocalDate startDate, LocalDate endDate) throws CibaCoworkingException {
+        List<Reservation> reservationsBySpace = reservationRepository.findReservationsBySpaceAndDate(spaceId, startDate, endDate);
+        if ( reservationsBySpace == null || reservationsBySpace.size() == 0){
+            throw new CibaCoworkingException("Per aquesta data no hi ha reserves", HttpStatus.NOT_FOUND);
+        }
+        return reservationsBySpace.stream()
                 .map(dtoMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
+
 
     // Obtener todas las reservas de un usuario
     public List<ReservationDTO> getReservationsByUser(int userId) throws CibaCoworkingException {
@@ -55,7 +58,6 @@ public class ReservationService {
                 .map(dtoMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
-
    
     // Obtener una reserva por ID
     public ReservationDTO getReservationById(int id) throws CibaCoworkingException {
@@ -67,9 +69,7 @@ public class ReservationService {
         return dtoMapper.convertToDTO(reservationOpt.get());
     }
 
- 
-
-    // Crear una nueva reserva
+     // Crear una nueva reserva
     public ReservationDTO createReservation(ReservationDTO reservationDTO) throws CibaCoworkingException {
         try {
             Reservation reservation = dtoMapper.convertToEntity(reservationDTO);
@@ -104,9 +104,7 @@ public class ReservationService {
         }
     }
     
-
     
-
     // Eliminar una reserva 
 
 
