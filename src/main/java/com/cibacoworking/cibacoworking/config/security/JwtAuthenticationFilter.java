@@ -1,4 +1,4 @@
-/* package com.cibacoworking.cibacoworking.config;
+package com.cibacoworking.cibacoworking.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -80,4 +80,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 }
- */

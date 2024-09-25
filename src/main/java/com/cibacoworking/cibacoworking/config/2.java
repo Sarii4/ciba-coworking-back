@@ -43,7 +43,7 @@ public class SecurityConfig {
     }
 }
  */
-package com.cibacoworking.cibacoworking.config;
+/* package com.cibacoworking.cibacoworking.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,4 +64,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-}
+} */
