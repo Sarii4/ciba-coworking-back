@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,18 +70,61 @@ public class ReservationService {
         return dtoMapper.convertToDTO(reservationOpt.get());
     }
 
-     // Crear una nueva reserva
-    public ReservationDTO createReservation(ReservationDTO reservationDTO) throws CibaCoworkingException {
-        try {
+// Crear una nueva reserva por oficinas y sala
+    public ReservationDTO createReservationOffices(ReservationDTO reservationDTO) throws CibaCoworkingException {
+        
+        LocalDate currentDate = LocalDate.now();
+        if (reservationDTO.getStartDate().isBefore(currentDate)) {
+        throw new CibaCoworkingException("No es pot fer una reserva per una data ja passada.", HttpStatus.BAD_REQUEST);
+    }
+
+        boolean isAvailable = isTableAvailable(reservationDTO.getSpaceDTO().getId(), reservationDTO.getStartDate(), reservationDTO.getEndDate(), reservationDTO.getStartTime(), reservationDTO.getEndTime());
+
+        if (isAvailable) {
+            try {
             Reservation reservation = dtoMapper.convertToEntity(reservationDTO);
             Reservation savedReservation = reservationRepository.save(reservation);
             return dtoMapper.convertToDTO(savedReservation);
-        } catch (Exception e) {
-            throw new CibaCoworkingException("No s'ha pogut crear la reserva", HttpStatus.INTERNAL_SERVER_ERROR);
+            } catch (Exception e) {
+                throw new CibaCoworkingException("No s'ha pogut crear la reserva", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            throw new CibaCoworkingException("Aquest espai ja està reservat per aquest periode.", HttpStatus.BAD_REQUEST);
         }
+
     }
 
-  
+//Verificar la disponibilidad de mesa individual
+    public boolean isTableAvailable(int spaceId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        List<Reservation> conflictingReservations = reservationRepository.findConflictingReservations(spaceId, startDate, endDate, startTime, endTime);
+        return conflictingReservations.isEmpty();
+    }
+
+// Crear una nueva reserva de mesas individuales
+    public ReservationDTO createReservationTables(ReservationDTO reservationDTO) throws CibaCoworkingException {
+        //AÑADIR CONDICIÓN DE COMPROBAR STATUS
+        LocalDate currentDate = LocalDate.now();
+        if (reservationDTO.getStartDate().isBefore(currentDate)) {
+        throw new CibaCoworkingException("No es pot fer una reserva per una data ja passada.", HttpStatus.BAD_REQUEST);
+    }
+
+        boolean isAvailable = isTableAvailable(reservationDTO.getSpaceDTO().getId(), reservationDTO.getStartDate(), reservationDTO.getEndDate(), reservationDTO.getStartTime(), reservationDTO.getEndTime());
+
+        if (isAvailable) {
+            try {
+            Reservation reservation = dtoMapper.convertToEntity(reservationDTO);
+            Reservation savedReservation = reservationRepository.save(reservation);
+            return dtoMapper.convertToDTO(savedReservation);
+            } catch (Exception e) {
+                throw new CibaCoworkingException("No s'ha pogut crear la reserva", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            throw new CibaCoworkingException("La taula ja està reservada per aquest periode.", HttpStatus.BAD_REQUEST);
+        }
+
+        
+    }
+
 
     // Actualizar una reserva existente
     public ReservationDTO updateReservation(int id, ReservationDTO reservationDTO) throws CibaCoworkingException {

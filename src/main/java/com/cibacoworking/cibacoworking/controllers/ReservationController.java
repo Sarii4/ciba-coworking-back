@@ -22,13 +22,26 @@ public class ReservationController {
     //User reservations
     
     //Crear reserva por usuario
-    @PostMapping(ConstantsSecurity.CREATE_RESERVATION_BY_USER)
+    /* @PostMapping(ConstantsSecurity.CREATE_RESERVATION_BY_USER)
     public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) throws CibaCoworkingException {
         ReservationDTO savedReservation = reservationService.createReservation(reservationDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
     }
+ */
+ //Crear reserva mesas 
+ @PostMapping(ConstantsSecurity.CREATE_RESERVATION_TABLES)
+    public ResponseEntity<ReservationDTO> createReservationTables(@RequestBody ReservationDTO reservationDTO) throws CibaCoworkingException {
+        ReservationDTO savedReservation = reservationService.createReservationTables(reservationDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
+    }
 
- 
+ //Crear reserva oficinas y sala
+
+ @PostMapping(ConstantsSecurity.CREATE_RESERVATION_OFFICES)
+ public ResponseEntity<ReservationDTO> createReservationOffices(@RequestBody ReservationDTO reservationDTO) throws CibaCoworkingException {
+     ReservationDTO savedReservation = reservationService.createReservationOffices(reservationDTO);
+     return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
+ }
 
       // Crear reserva a largo plazo por administrador
       @PostMapping(ConstantsSecurity.CREATE_LONG_TERM_RESERVATION_ADMIN)
