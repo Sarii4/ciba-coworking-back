@@ -2,8 +2,12 @@ package com.cibacoworking.cibacoworking.models.dtos.auth;
 
 public class LoginRequest {
     private String email; 
-    private String password; 
+    private String password;
 
+    // Constructor vacío
+    public LoginRequest() {}
+
+    // Getters y Setters
     public String getEmail() {
         return email;
     }

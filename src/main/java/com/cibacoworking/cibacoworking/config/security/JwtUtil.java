@@ -17,7 +17,7 @@ public class JwtUtil {
     @Value("${JWT_SECRET_KEY}")
     private String secretKey; // Carga la clave desde el .env
 
-    private final long expirationTime = 86400000; // 1 día en milisegundos
+    private final long expirationTime = 86400000; 
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();

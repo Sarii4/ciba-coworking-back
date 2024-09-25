@@ -1,10 +1,10 @@
 package com.cibacoworking.cibacoworking.controllers;
 
 import com.cibacoworking.cibacoworking.config.security.JwtUtil;
-import com.cibacoworking.cibacoworking.models.dtos.auth.Login; 
 import com.cibacoworking.cibacoworking.models.dtos.AdminUserDTO;
 import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 import com.cibacoworking.cibacoworking.models.dtos.auth.LoginRequest;
+import com.cibacoworking.cibacoworking.models.dtos.auth.LoginResponse;
 import com.cibacoworking.cibacoworking.models.entities.User;
 import com.cibacoworking.cibacoworking.services.DTOMapper;
 import com.cibacoworking.cibacoworking.services.UserService;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,22 +65,28 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Login> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
         try {
+            // Intentar autenticar al usuario con el email y la contraseña proporcionados
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         } catch (Exception e) {
+            // Si la autenticación falla, devolver un estado 401 (No autorizado)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); 
         }
 
+        // Generar un token JWT para el usuario autenticado
         String token = jwtUtil.generateToken(loginRequest.getEmail());
 
-        UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmail());
-        User user = new User();
-        user.setId(((User) userDetails).getId());
-        user.setEmail(userDetails.getUsername());
+        // Autenticar al usuario y obtener el usuario autenticado
+        User user = userService.getUserByEmail(loginRequest.getEmail());
+        
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        Login loginResponse = new Login(user, token, true);
+        // Crear una respuesta de inicio de sesión con el objeto User y el token
+        LoginResponse loginResponse = new LoginResponse(token);
         return ResponseEntity.ok(loginResponse);
     }
 
