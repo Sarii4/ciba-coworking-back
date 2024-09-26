@@ -40,7 +40,7 @@ public class SpaceService {
     }
 
     //Cambiar el estatus de una mesa por su Id
-    public void updateTableStatus(int id) throws CibaCoworkingException {
+    public void updateTableStatus(int id, String newStatus) throws CibaCoworkingException {
         Optional<Space> spaceOpt = spaceRepository.findById(id);
         if (!spaceOpt.isPresent()) {
             throw new CibaCoworkingException("No s'ha trobat la taula per actualitzar", HttpStatus.NOT_FOUND);
@@ -48,7 +48,7 @@ public class SpaceService {
     
         try {
             Space existingTable = spaceOpt.get();
-            existingTable.setSpaceStatus("inactiu");
+            existingTable.setSpaceStatus(newStatus);
             spaceRepository.save(existingTable);
         } catch (Exception e) {
             throw new CibaCoworkingException("No s'ha pogut actualitzar l'estat de la taula", HttpStatus.INTERNAL_SERVER_ERROR);

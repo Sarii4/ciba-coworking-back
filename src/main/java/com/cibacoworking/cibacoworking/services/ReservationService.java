@@ -34,7 +34,7 @@ public class ReservationService {
             throw new CibaCoworkingException("La data d'inici no pot ser posterior a la data de finalització", HttpStatus.BAD_REQUEST);
         }
         Reservation reservation = dtoMapper.convertToEntity(reservationDTO);
-        spaceService.updateTableStatus(reservation.getSpace().getId());
+        spaceService.updateTableStatus(reservation.getSpace().getId(), "inactiu");
         Reservation savedReservation = reservationRepository.save(reservation);
         return dtoMapper.convertToDTO(savedReservation);
     }
@@ -163,7 +163,18 @@ public class ReservationService {
         if (!reservationOpt.isPresent()) {
             throw new CibaCoworkingException("No s'ha trobat la reserva", HttpStatus.CONFLICT);
         }
-        reservationRepository.delete(reservationOpt.get());
-        return new ResponseEntity<>("S'ha eliminat amb èxit", HttpStatus.OK);
+        Reservation existingReservation = reservationOpt.get();
+
+        boolean isTableActive = spaceService.checkTableStatus(existingReservation.getSpace().getId());
+        
+        try {
+            if (!isTableActive) {
+                spaceService.updateTableStatus(existingReservation.getSpace().getId(), "actiu");
+            }
+            reservationRepository.delete(existingReservation);
+            return new ResponseEntity<>("S'ha eliminat amb èxit", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("No s'ha pogut eliminar la reserva", HttpStatus.BAD_REQUEST);
+        }
     }
 }
