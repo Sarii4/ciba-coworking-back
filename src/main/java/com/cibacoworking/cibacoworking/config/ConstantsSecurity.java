@@ -12,6 +12,7 @@ public class ConstantsSecurity {
     //Reservations
 
     public static final String GET_RESERVATIONS_BY_SPACE_AND_DATE = "/api/spaces/{spaceId}/date-range";
+    public static final String GET_TABLES_BY_DATE = "/api/spaces/date-range";
     
     public static final String CREATE_RESERVATION_TABLES = "/api/reservations/create/tables";
     public static final String CREATE_RESERVATION_OFFICES = "/api/reservations/create/offices";
