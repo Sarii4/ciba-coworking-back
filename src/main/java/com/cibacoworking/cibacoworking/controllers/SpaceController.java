@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,12 +22,12 @@ public class SpaceController {
     @Autowired
     private SpaceService spaceService;
 
-    // Obtener todas las mesas con información completa por fechas concretas
+    // Obtener todas las mesas disponibles con información de la mesa por fechas concretas
     @GetMapping(ConstantsSecurity.GET_TABLES_BY_DATE)
-    public ResponseEntity<List<SpaceDTO>> getAllTablesByDate(
+    public ResponseEntity<List<SpaceDTO>> getAllAvailableTablesByDate(
             @RequestBody DateRangeRequestDTO dateRange) throws CibaCoworkingException {
         
-        List<SpaceDTO> availableSpaces = spaceService.getAllTablesByDate(
+        List<SpaceDTO> availableSpaces = spaceService.getAllAvailableTablesByDate(
             dateRange.getStartDate(), 
             dateRange.getEndDate(),
             dateRange.getStartTime(),
@@ -34,13 +35,11 @@ public class SpaceController {
         return ResponseEntity.ok(availableSpaces);
     }
 
-    
-
-   /*  @GetMapping("/{id}")
-    public SpaceDTO getSpaceById(@PathVariable int id) {
-        Space space = spaceService.findById(id).orElse(null);
-        return dtoMapper.convertToDTO(space);
-    } */
+    @GetMapping(ConstantsSecurity.GET_SPACE_BY_ID)
+    public ResponseEntity<SpaceDTO> getSpaceById(@PathVariable int id) {
+        SpaceDTO spaceDTO = spaceService.getSpaceById(id);
+        return ResponseEntity.ok(spaceDTO);
+    }
 
     /* @PostMapping
     public SpaceDTO createSpace(@RequestBody SpaceDTO spaceDTO) {

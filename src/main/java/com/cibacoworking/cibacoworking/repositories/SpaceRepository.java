@@ -18,6 +18,7 @@ public interface SpaceRepository extends JpaRepository<Space, Integer> {
 @Query("SELECT s.spaceStatus FROM Space s WHERE s.id = :spaceId")
     String findSpaceStatusById(@Param("spaceId") int spaceId);
 
+
 //Esta query trae todas las mesas que estan en "actiu" y no tiene reservas para este periodo
     @Query("SELECT s FROM Space s " +
     "WHERE s.id BETWEEN 4 AND 53 " +
@@ -32,7 +33,7 @@ public interface SpaceRepository extends JpaRepository<Space, Integer> {
     "        OR (r.startTime < :endTime AND r.endTime > :startTime) " +
     "    ) " +
     ")")
-    List<Space> findTablesByDate (
+    List<Space> findAvailableTablesByDate (
         @Param("startDate") LocalDate startDate, 
         @Param("endDate") LocalDate endDate,
         @Param("startTime") LocalTime startTime,

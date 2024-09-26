@@ -24,13 +24,29 @@ public class SpaceService {
     @Autowired
     private DTOMapper dtoMapper;
 
-    // Obtener todas las mesas con información completa por fechas concretas
-    public List<SpaceDTO> getAllTablesByDate(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) throws CibaCoworkingException {
+    // Obtener todas las mesas disponibles con información completa por fechas concretas
+    public List<SpaceDTO> getAllAvailableTablesByDate(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) throws CibaCoworkingException {
+        List<Space> tablesByDate = spaceRepository.findAvailableTablesByDate(startDate, endDate, startTime, endTime);
+        
+        return tablesByDate.stream()
+                .map(dtoMapper::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Obtener todas las mesas  con información completa por fechas concretas
+    /* public List<SpaceDTO> getAllTablesByDate(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) throws CibaCoworkingException {
         List<Space> tablesByDate = spaceRepository.findTablesByDate(startDate, endDate, startTime, endTime);
         
         return tablesByDate.stream()
                 .map(dtoMapper::convertToDTO)
                 .collect(Collectors.toList());
+    } */
+
+
+    //Obtener detalles de un espacio por su Id
+    public SpaceDTO getSpaceById(int spaceId) {
+        Space space = spaceRepository.findById(spaceId).orElse(null);
+        return dtoMapper.convertToDTO(space);
     }
 
     //Comprobar el estatus de una mesa por su Id
