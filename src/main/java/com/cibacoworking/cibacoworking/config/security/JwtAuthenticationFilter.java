@@ -4,34 +4,31 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.ExpiredJwtException;
-
-import org.springframework.lang.NonNull;
+import com.cibacoworking.cibacoworking.services.CustomUserDetailsService;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     private static final Logger logger = Logger.getLogger(JwtAuthenticationFilter.class.getName());
-    private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
-    private final JwtConfig jwtConfig;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService, JwtConfig jwtConfig) {
+    private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
         this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-        this.jwtConfig = jwtConfig;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
@@ -39,29 +36,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response, 
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
+
         final String token = getTokenFromRequest(request);
 
         if (token != null && StringUtils.hasText(token)) {
-            String username;
-            try {
-                username = jwtUtil.extractUsername(token);
-                logger.info("Token válido para el usuario: " + username);
-            } catch (ExpiredJwtException e) {
-                logger.warning("Token expirado para el usuario: " + e.getMessage());
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
-                return;
-            } catch (Exception e) {
-                logger.warning("Token inválido: " + e.getMessage());
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
-                return;
-            }
+            String username = jwtUtil.extractUsername(token);
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             if (jwtUtil.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authenticationToken = 
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                logger.info("Usuario autenticado: " + username);
             } else {
                 logger.warning("Token no válido para el usuario: " + username);
             }
@@ -73,9 +61,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        final String authHeader = request.getHeader(jwtConfig.getHeader());
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith(jwtConfig.getPrefix())) {
-            return authHeader.substring(jwtConfig.getPrefix().length()).trim();
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);  
         }
         return null;
     }

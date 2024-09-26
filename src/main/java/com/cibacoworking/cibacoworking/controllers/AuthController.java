@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid; 
 
 @RestController
-@RequestMapping("/api/auth")
 @Validated
 public class AuthController {
 
@@ -31,24 +30,23 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
-            // Intentar autenticar al usuario
+           
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         } catch (Exception e) {
-            // Si la autenticación falla, devolver un estado 401 (No autorizado)
+
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); 
         }
 
-        // Generar un token JWT para el usuario autenticado
         String token = jwtUtil.generateToken(loginRequest.getEmail());
         
-        // Obtener el usuario autenticado
+    
         User user = userService.getUserByEmail(loginRequest.getEmail());
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // Crear una respuesta de inicio de sesión con el token
+        
         LoginResponse loginResponse = new LoginResponse(token);
         return ResponseEntity.ok(loginResponse);
     }

@@ -1,13 +1,22 @@
 package com.cibacoworking.cibacoworking.models.dtos.auth;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginRequest {
     private String email; 
     private String password;
 
-    // Constructor vacío
-    public LoginRequest() {}
+    
 
-    // Getters y Setters
+    
     public String getEmail() {
         return email;
     }

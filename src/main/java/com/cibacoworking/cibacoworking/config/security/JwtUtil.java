@@ -1,23 +1,24 @@
 package com.cibacoworking.cibacoworking.config.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class JwtUtil {
-    @Value("${JWT_SECRET_KEY}")
-    private String secretKey; // Carga la clave desde el .env
 
-    private final long expirationTime = 86400000; 
+    @Value("${JWT_SECRET_KEY}")  // Cargar desde .env
+    private String secretKey;
+
+    @Value("${JWT_EXPIRATION_TIME}")  // Cargar desde .env
+    private long expirationTime;
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
@@ -26,28 +27,40 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256) // Asegúrate de usar la clave correcta
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new RuntimeException("Token ha expirado", e);
+        } catch (MalformedJwtException e) {
+            throw new RuntimeException("Token malformado", e);
+        } catch (io.jsonwebtoken.security.SecurityException e) {  // Cambiado a SecurityException
+            throw new RuntimeException("Firma del token inválida", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al procesar el token", e);
+        }
     }
 
     public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
+        Claims claims = extractAllClaims(token);
+        return claims != null ? claims.getSubject() : null;
     }
 
     public boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
+        Claims claims = extractAllClaims(token);
+        return claims != null && claims.getExpiration().before(new Date());
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        String extractedUsername = extractUsername(token);
+        return (extractedUsername != null && extractedUsername.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

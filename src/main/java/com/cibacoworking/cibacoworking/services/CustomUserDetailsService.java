@@ -1,33 +1,30 @@
-/* package com.cibacoworking.cibacoworking.services;
+package com.cibacoworking.cibacoworking.services;
 
 import com.cibacoworking.cibacoworking.models.entities.User;
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+@Primary 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+      
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
         
-        return org.springframework.security.core.userdetails.User
-            .withUsername(user.getEmail())
-            .password(user.getPassword())
-            .authorities(user.getRole().getRol())  // Cambiado a getRol()
-            .accountExpired(false)
-            .accountLocked(false)
-            .credentialsExpired(false)
-            .disabled(false)
-            .build();
+    
+        return user; 
     }
 }
- */
