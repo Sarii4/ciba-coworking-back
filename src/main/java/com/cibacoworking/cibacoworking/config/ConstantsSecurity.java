@@ -8,8 +8,11 @@ public class ConstantsSecurity {
 
     //User actions
     public static final String GET_RESERVATIONS_BY_USER = "/api/reservations/user/{userId}";
+
     
     //Reservations
+
+    public static final String GET_RESERVATION_BY_ID = "/api/reservations/{reservationId}";
 
     public static final String GET_RESERVATIONS_BY_SPACE_AND_DATE = "/api/spaces/{spaceId}/date-range";
     public static final String GET_TABLES_BY_DATE = "/api/spaces/date-range";

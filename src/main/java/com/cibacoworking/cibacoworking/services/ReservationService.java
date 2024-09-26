@@ -1,26 +1,29 @@
 package com.cibacoworking.cibacoworking.services;
 
-import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
-import com.cibacoworking.cibacoworking.models.entities.Reservation;
-import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
+import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
+import com.cibacoworking.cibacoworking.models.entities.Reservation;
+import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
 
 @Service
 public class ReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired 
+    private SpaceService spaceService;
 
     @Autowired
     private DTOMapper dtoMapper;
@@ -31,6 +34,7 @@ public class ReservationService {
             throw new CibaCoworkingException("La data d'inici no pot ser posterior a la data de finalització", HttpStatus.BAD_REQUEST);
         }
         Reservation reservation = dtoMapper.convertToEntity(reservationDTO);
+        spaceService.updateTableStatus(reservation.getSpace().getId());
         Reservation savedReservation = reservationRepository.save(reservation);
         return dtoMapper.convertToDTO(savedReservation);
     }
@@ -102,7 +106,9 @@ public class ReservationService {
 
 // Crear una nueva reserva de mesas individuales
     public ReservationDTO createReservationTables(ReservationDTO reservationDTO) throws CibaCoworkingException {
-        //AÑADIR CONDICIÓN DE COMPROBAR STATUS
+
+        boolean isTableActive = spaceService.checkTableStatus(reservationDTO.getSpaceDTO().getId());
+
         LocalDate currentDate = LocalDate.now();
         if (reservationDTO.getStartDate().isBefore(currentDate)) {
         throw new CibaCoworkingException("No es pot fer una reserva per una data ja passada.", HttpStatus.BAD_REQUEST);
@@ -110,7 +116,7 @@ public class ReservationService {
 
         boolean isAvailable = isTableAvailable(reservationDTO.getSpaceDTO().getId(), reservationDTO.getStartDate(), reservationDTO.getEndDate(), reservationDTO.getStartTime(), reservationDTO.getEndTime());
 
-        if (isAvailable) {
+        if (isAvailable && isTableActive) {
             try {
             Reservation reservation = dtoMapper.convertToEntity(reservationDTO);
             Reservation savedReservation = reservationRepository.save(reservation);

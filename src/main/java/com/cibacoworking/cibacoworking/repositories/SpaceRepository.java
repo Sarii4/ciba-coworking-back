@@ -14,6 +14,10 @@ import com.cibacoworking.cibacoworking.models.entities.Space;
 @Repository
 public interface SpaceRepository extends JpaRepository<Space, Integer> {
 
+//Esta query trae el estado de la mesa concreta (actiu/inactiu)
+@Query("SELECT s.spaceStatus FROM Space s WHERE s.id = :spaceId")
+    String findSpaceStatusById(@Param("spaceId") int spaceId);
+
 //Esta query trae todas las mesas que estan en "actiu" y no tiene reservas para este periodo
     @Query("SELECT s FROM Space s " +
     "WHERE s.id BETWEEN 4 AND 53 " +
