@@ -1,9 +1,5 @@
-package com.cibacoworking.cibacoworking.services;
+package com.cibacoworking.cibacoworking.models.dtos;
 
-import com.cibacoworking.cibacoworking.models.dtos.AdminUserDTO;
-import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
-import com.cibacoworking.cibacoworking.models.dtos.SpaceDTO;
-import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.models.entities.Space;
 import com.cibacoworking.cibacoworking.models.entities.User;

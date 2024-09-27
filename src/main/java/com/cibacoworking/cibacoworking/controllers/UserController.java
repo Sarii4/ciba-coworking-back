@@ -1,9 +1,10 @@
 package com.cibacoworking.cibacoworking.controllers;
 
 import com.cibacoworking.cibacoworking.models.dtos.AdminUserDTO;
+import com.cibacoworking.cibacoworking.models.dtos.DTOMapper;
 import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 import com.cibacoworking.cibacoworking.models.entities.User;
-import com.cibacoworking.cibacoworking.services.DTOMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
