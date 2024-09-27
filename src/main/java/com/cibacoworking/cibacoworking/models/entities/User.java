@@ -22,7 +22,7 @@ public class User implements UserDetails {
     @Column(length = 50, nullable = false, unique = true)
     private String email;
 
-    @Column(length = 10, nullable = false)
+    @Column(length = 60, nullable = false) // Cambiado a 60
     private String password;
 
     @Column(length = 15)
@@ -36,6 +36,8 @@ public class User implements UserDetails {
     private Role role;
 
     public User() {}
+
+    // Getters y Setters
 
     public int getId() {
         return id;

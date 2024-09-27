@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
     private static final Logger logger = Logger.getLogger(JwtAuthenticationFilter.class.getName());
 
     private final JwtUtil jwtUtil;
@@ -37,6 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
+        // Loguea el encabezado de autorización para verificarlo
+        logger.info("Authorization header: " + request.getHeader(HttpHeaders.AUTHORIZATION));
+
         final String token = getTokenFromRequest(request);
 
         if (token != null && StringUtils.hasText(token)) {
@@ -52,9 +56,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 logger.info("Usuario autenticado: " + username);
             } else {
                 logger.warning("Token no válido para el usuario: " + username);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token JWT no válido.");
+                return; // Salimos del método si el token no es válido
             }
         } else {
             logger.warning("Token no proporcionado");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Se requiere un token JWT para acceder a este recurso.");
+            return; // Salimos del método si no hay token
         }
 
         filterChain.doFilter(request, response);
@@ -64,8 +72,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);  
+            return authHeader.substring(7);  // Remueve "Bearer " para obtener el token real
         }
         return null;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(@SuppressWarnings("null") HttpServletRequest request) throws ServletException {
+        String path = request.getServletPath();
+        // Excluye las rutas públicas que no necesitan autenticación
+        return path.equals("/api/users/login") || path.equals("/api/users/register") || path.equals("/api/users/logout");
     }
 }
