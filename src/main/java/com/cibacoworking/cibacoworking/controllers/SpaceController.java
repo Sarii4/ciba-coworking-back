@@ -35,16 +35,12 @@ public class SpaceController {
         return ResponseEntity.ok(availableSpaces);
     }
 
+    //Obtener detalles de un espacio por su id
     @GetMapping(ConstantsSecurity.GET_SPACE_BY_ID)
-    public ResponseEntity<SpaceDTO> getSpaceById(@PathVariable int id) {
-        SpaceDTO spaceDTO = spaceService.getSpaceById(id);
+    public ResponseEntity<SpaceDTO> getSpaceById(@PathVariable int spaceId) {
+        SpaceDTO spaceDTO = spaceService.getSpaceById(spaceId);
         return ResponseEntity.ok(spaceDTO);
     }
 
-    /* @PostMapping
-    public SpaceDTO createSpace(@RequestBody SpaceDTO spaceDTO) {
-        Space space = dtoMapper.convertToEntity(spaceDTO);
-        Space savedSpace = dtoMapper.saveSpace(space);
-        return dtoMapper.convertToDTO(savedSpace);
-    } */
+    
 }

@@ -28,17 +28,7 @@ public class ReservationService {
     @Autowired
     private DTOMapper dtoMapper;
 
-     // Crear una reserva a largo plazo por administrador
-     public ReservationDTO createLongTermReservation(ReservationDTO reservationDTO) throws CibaCoworkingException {
-        if (reservationDTO.getStartDate().isAfter(reservationDTO.getEndDate())) {
-            throw new CibaCoworkingException("La data d'inici no pot ser posterior a la data de finalització", HttpStatus.BAD_REQUEST);
-        }
-        Reservation reservation = dtoMapper.convertToEntity(reservationDTO);
-        spaceService.updateTableStatus(reservation.getSpace().getId(), "inactiu");
-        Reservation savedReservation = reservationRepository.save(reservation);
-        return dtoMapper.convertToDTO(savedReservation);
-    }
-
+    //OBTENER RESERVAS
     // Obtener reservas por ID de espacio y fechas concretas
     public List<ReservationDTO> getReservationsBySpaceAndDate(int spaceId, LocalDate startDate, LocalDate endDate) throws CibaCoworkingException {
         List<Reservation> reservationsBySpace = reservationRepository.findReservationsBySpaceAndDate(spaceId, startDate, endDate);
@@ -51,7 +41,7 @@ public class ReservationService {
     }
 
 
-    // Obtener todas las reservas de un usuario
+    // Obtener todas las reservas de un usuario por el id de usuario
     public List<ReservationDTO> getReservationsByUser(int userId) throws CibaCoworkingException {
         List<Reservation> reservations = reservationRepository.findByUserId(userId);
         
@@ -63,8 +53,8 @@ public class ReservationService {
                 .map(dtoMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
-   
-    // Obtener una reserva por ID
+
+    // Obtener una reserva por su ID
     public ReservationDTO getReservationById(int id) throws CibaCoworkingException {
         Optional<Reservation> reservationOpt = reservationRepository.findById(id);
         if (!reservationOpt.isPresent()) {
@@ -72,6 +62,18 @@ public class ReservationService {
         }
         
         return dtoMapper.convertToDTO(reservationOpt.get());
+    }
+
+    //CREAR RESERVAS
+    // Crear una reserva a largo plazo por administrador
+    public ReservationDTO createLongTermReservation(ReservationDTO reservationDTO) throws CibaCoworkingException {
+        if (reservationDTO.getStartDate().isAfter(reservationDTO.getEndDate())) {
+            throw new CibaCoworkingException("La data d'inici no pot ser posterior a la data de finalització", HttpStatus.BAD_REQUEST);
+        }
+        Reservation reservation = dtoMapper.convertToEntity(reservationDTO);
+        spaceService.updateTableStatus(reservation.getSpace().getId(), "inactiu");
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return dtoMapper.convertToDTO(savedReservation);
     }
 
 // Crear una nueva reserva por oficinas y sala
@@ -132,7 +134,7 @@ public class ReservationService {
     }
 
 
-    // Actualizar una reserva existente
+    // ACTUALIZAR una reserva existente
     public ReservationDTO updateReservation(int id, ReservationDTO reservationDTO) throws CibaCoworkingException {
         Optional<Reservation> reservationOpt = reservationRepository.findById(id);
         if (!reservationOpt.isPresent()) {
@@ -155,9 +157,7 @@ public class ReservationService {
     }
     
     
-    // Eliminar una reserva 
-
-
+    // ELIMINAR una reserva 
     public ResponseEntity<Object> deleteReservation(int id) throws CibaCoworkingException {
         Optional<Reservation> reservationOpt = reservationRepository.findById(id);
         if (!reservationOpt.isPresent()) {

@@ -28,7 +28,7 @@ public class ConstantsSecurity {
     
     // Espacios (spaces)
 
-    public static final String GET_SPACE_BY_ID = "/api/reservations/{spaceId}";
+    public static final String GET_SPACE_BY_ID = "/api/spaces/{spaceId}";
 
 
 }

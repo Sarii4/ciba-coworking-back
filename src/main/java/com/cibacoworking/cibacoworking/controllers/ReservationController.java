@@ -25,18 +25,8 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-    // User reservations
+    // CREAR RESERVAS
 
-    // Crear reserva por usuario
-    /*
-     * @PostMapping(ConstantsSecurity.CREATE_RESERVATION_BY_USER)
-     * public ResponseEntity<ReservationDTO> createReservation(@RequestBody
-     * ReservationDTO reservationDTO) throws CibaCoworkingException {
-     * ReservationDTO savedReservation =
-     * reservationService.createReservation(reservationDTO);
-     * return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
-     * }
-     */
     // Crear reserva mesas
     @PostMapping(ConstantsSecurity.CREATE_RESERVATION_TABLES)
     public ResponseEntity<ReservationDTO> createReservationTables(@RequestBody ReservationDTO reservationDTO)
@@ -62,7 +52,9 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
     }
 
-    // Ver todas las reservas por usuario
+    // VER RESERVAS
+
+    // Obtener todas las reservas por id de usuario
     @GetMapping(ConstantsSecurity.GET_RESERVATIONS_BY_USER)
     public ResponseEntity<List<ReservationDTO>> getReservationsByUser(@PathVariable int userId)
             throws CibaCoworkingException {
@@ -70,7 +62,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservationDTOs);
     }
 
-    // Ver detalles de una reserva por id
+    // Obtener detalles de una reserva por id de reserva
     @GetMapping(ConstantsSecurity.GET_RESERVATION_BY_ID)
     public ResponseEntity<ReservationDTO> getReservationById(@PathVariable int reservationId)
             throws CibaCoworkingException {
@@ -89,7 +81,7 @@ public class ReservationController {
         return ResponseEntity.ok(availableSpaces);
     }
 
-    // Actualizar reserva
+    //ACTUALIZAR RESERVA
     @PutMapping(ConstantsSecurity.UPDATE_RESERVATION)
     public ResponseEntity<ReservationDTO> updateReservation(
             @PathVariable int reservationId,
@@ -99,7 +91,7 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedReservation);
     }
 
-    // Eliminar reserva
+    // ELIMINAR RESERVA
     @DeleteMapping(ConstantsSecurity.DELETE_RESERVATION)
     public ResponseEntity<String> deleteReservation(@PathVariable int reservationId) throws CibaCoworkingException {
         reservationService.deleteReservation(reservationId);
