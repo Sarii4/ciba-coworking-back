@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.dtos.DTOMapper;
+import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
 import com.cibacoworking.cibacoworking.models.dtos.SpaceDTO;
+import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.models.entities.Space;
 import com.cibacoworking.cibacoworking.repositories.SpaceRepository;
 
@@ -34,14 +36,14 @@ public class SpaceServiceImpl implements SpaceService {
                 .collect(Collectors.toList());
     }
 
-    // Obtener todas las mesas  con información completa por fechas concretas
-    /* public List<SpaceDTO> getAllTablesByDate(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) throws CibaCoworkingException {
-        List<Space> tablesByDate = spaceRepository.findTablesByDate(startDate, endDate, startTime, endTime);
-        
-        return tablesByDate.stream()
+    // Obtener las mesas reservadas e inactivas con información de las reservas por fechas concretas
+    public List<ReservationDTO> getTablesWithReservations(LocalDate startDate, LocalDate endDate) throws CibaCoworkingException {
+    List<Reservation> tablesWithReservations = spaceRepository.findTablesWithReservations(startDate, endDate);
+    
+    return tablesWithReservations.stream()
                 .map(dtoMapper::convertToDTO)
                 .collect(Collectors.toList());
-    } */
+}
 
 
     //Obtener detalles de un espacio por su Id

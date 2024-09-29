@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.models.entities.Space;
 
 @Repository
@@ -40,5 +41,21 @@ public interface SpaceRepository extends JpaRepository<Space, Integer> {
         @Param("endTime") LocalTime endTime
     );
 
-        
+    @Query("SELECT r FROM Space s " +
+    "LEFT JOIN Reservation r ON r.space.id = s.id " +
+    "WHERE s.id BETWEEN 4 AND 53 " +
+    "AND s.spaceStatus = 'inactiu' " +
+    "AND EXISTS ( " +  
+    "    SELECT r FROM Reservation r " +
+    "    WHERE r.space.id = s.id " +
+    "    AND ( " +
+    "        (r.startDate BETWEEN :startDate AND :endDate) " +
+    "        OR (r.endDate BETWEEN :startDate AND :endDate) " +
+    "        OR (:startDate BETWEEN r.startDate AND r.endDate AND :endDate BETWEEN r.startDate AND r.endDate) " +
+    "    ) " +
+    ")")
+    List<Reservation> findTablesWithReservations(
+        @Param("startDate") LocalDate startDate, 
+        @Param("endDate") LocalDate endDate
+    );
 }
