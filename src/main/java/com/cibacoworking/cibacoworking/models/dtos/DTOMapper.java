@@ -32,7 +32,7 @@ public class DTOMapper {
             user.getEmail(),
             user.getPhone(),
             user.getProjectName(),
-            (user.getRole() != null) ? user.getRole().getRole() : null  
+            (user.getRole() != null) ? user.getRole().getRol() : null  
         );
     }
 
@@ -89,7 +89,7 @@ public class DTOMapper {
             user.getPassword(),
             user.getPhone(),
             user.getProjectName(),
-            (user.getRole() != null) ? user.getRole().getRole() : null  
+            (user.getRole() != null) ? user.getRole().getRol() : null  
         );
     }
 
