@@ -27,11 +27,11 @@ public class ReservationController {
 
     // CREAR RESERVAS
 
-    // Crear reserva mesas
-    @PostMapping(ConstantsSecurity.CREATE_RESERVATION_TABLES)
+    // Crear reserva mesas por el usuario
+    @PostMapping(ConstantsSecurity.CREATE_RESERVATION_TABLES_BY_USER)
     public ResponseEntity<ReservationDTO> createReservationTables(@RequestBody ReservationDTO reservationDTO)
             throws CibaCoworkingException {
-        ReservationDTO savedReservation = reservationService.createReservationTables(reservationDTO);
+        ReservationDTO savedReservation = reservationService.createReservationTablesByUser(reservationDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
     }
 

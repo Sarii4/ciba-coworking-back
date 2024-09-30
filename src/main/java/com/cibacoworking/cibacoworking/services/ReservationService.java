@@ -16,7 +16,7 @@ public interface ReservationService {
     ReservationDTO createLongTermReservation(ReservationDTO reservationDTO) throws CibaCoworkingException;
     ReservationDTO createReservationOffices(ReservationDTO reservationDTO) throws CibaCoworkingException;
     boolean isTableAvailable(int spaceId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime);
-    ReservationDTO createReservationTables(ReservationDTO reservationDTO) throws CibaCoworkingException;
+    ReservationDTO createReservationTablesByUser(ReservationDTO reservationDTO) throws CibaCoworkingException ;
     ReservationDTO updateReservation(int id, ReservationDTO reservationDTO) throws CibaCoworkingException;
     ResponseEntity<Object> deleteReservation(int id) throws CibaCoworkingException;
     
