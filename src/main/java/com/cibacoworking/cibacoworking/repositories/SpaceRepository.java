@@ -42,20 +42,20 @@ public interface SpaceRepository extends JpaRepository<Space, Integer> {
     );
 
     @Query("SELECT r FROM Space s " +
-    "LEFT JOIN Reservation r ON r.space.id = s.id " +
+    "JOIN Reservation r ON r.space.id = s.id " +
     "WHERE s.id BETWEEN 4 AND 53 " +
-    "AND s.spaceStatus = 'inactiu' " +
     "AND EXISTS ( " +  
-    "    SELECT r FROM Reservation r " +
-    "    WHERE r.space.id = s.id " +
+    "    SELECT r2 FROM Reservation r2 " +
+    "    WHERE r2.space.id = s.id " +
     "    AND ( " +
-    "        (r.startDate BETWEEN :startDate AND :endDate) " +
-    "        OR (r.endDate BETWEEN :startDate AND :endDate) " +
-    "        OR (:startDate BETWEEN r.startDate AND r.endDate AND :endDate BETWEEN r.startDate AND r.endDate) " +
+    "        (r2.startDate BETWEEN :startDate AND :endDate) " +
+    "        OR (r2.endDate BETWEEN :startDate AND :endDate) " +
+    "        OR (:startDate BETWEEN r2.startDate AND r2.endDate AND :endDate BETWEEN r2.startDate AND r2.endDate) " +
     "    ) " +
     ")")
-    List<Reservation> findTablesWithReservations(
-        @Param("startDate") LocalDate startDate, 
-        @Param("endDate") LocalDate endDate
-    );
+List<Reservation> findTablesWithReservations(
+    @Param("startDate") LocalDate startDate, 
+    @Param("endDate") LocalDate endDate
+);
+
 }
