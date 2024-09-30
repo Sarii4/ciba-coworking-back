@@ -31,4 +31,7 @@ public class ConstantsSecurity {
     public static final String GET_TABLES_BY_DATE = "/api/spaces/tables/date-range";
     public static final String GET_TABLES_BY_DATE_WITH_RESERVATIONS = "/api/spaces/tables/reservations/date-range";
 
+    //Users management by admin
+    public static final String GET_ALL_USERS = "/api/admin/users";
+    public static final String CREATE_USER = "/api/admin/create/user";
 }

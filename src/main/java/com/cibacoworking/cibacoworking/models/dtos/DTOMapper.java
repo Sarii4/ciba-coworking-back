@@ -32,7 +32,7 @@ public class DTOMapper {
             user.getEmail(),
             user.getPhone(),
             user.getProjectName(),
-            (user.getRole() != null) ? user.getRole().getRol() : null  
+            (user.getRole() != null) ? user.getRole().getRole() : null  
         );
     }
 
@@ -46,7 +46,27 @@ public class DTOMapper {
         user.setProjectName(userDTO.getProjectName());
         return user;
     }
+   
+    //Convertimos User a userRegistrationDTO
+    public UserRegistrationDTO convertToRegistrationDTO(User user) {
+        return new UserRegistrationDTO(
+            user.getName(),
+            user.getEmail(),
+            user.getPhone(),
+            user.getProjectName(),
+            user.getPassword());
+    }
 
+    //Convertimos userRegistrationDTO a User
+    public User convertToEntity(UserRegistrationDTO userRegistrationDTO) {
+        User user = new User();
+        user.setName(userRegistrationDTO.getName());
+        user.setEmail(userRegistrationDTO.getEmail());
+        user.setPhone(userRegistrationDTO.getPhone());
+        user.setProjectName(userRegistrationDTO.getProjectName());
+        user.setPassword(userRegistrationDTO.getPassword());
+        return user;
+    }
 
     //Convertimos AdminUserDTO a User
     public User convertToEntity(AdminUserDTO adminUserDTO) {
@@ -69,7 +89,7 @@ public class DTOMapper {
             user.getPassword(),
             user.getPhone(),
             user.getProjectName(),
-            (user.getRole() != null) ? user.getRole().getRol() : null  
+            (user.getRole() != null) ? user.getRole().getRole() : null  
         );
     }
 
