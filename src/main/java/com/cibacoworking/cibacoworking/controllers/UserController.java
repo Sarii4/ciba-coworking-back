@@ -33,6 +33,39 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // Método para autenticar al usuario
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        try {
+            authenticationManager.authenticate(
+                  new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); 
+        }
+
+        String token = jwtUtil.generateToken(loginRequest.getEmail());
+        User user = userService.getUserByEmail(loginRequest.getEmail());
+        
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        LoginResponse loginResponse = new LoginResponse(token);
+        return ResponseEntity.ok(loginResponse);
+    }
+
+    // Método para registrar un nuevo usuario
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@Validated @RequestBody User user) {
+        if (userService.getUserByEmail(user.getEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
+        }
+        
+        userService.registerUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+    }
+
+    // Obtener usuario por ID
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
         User user = userServices.findById(id);
@@ -40,6 +73,7 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
     }
 
+    // Crear un nuevo usuario
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@Validated @RequestBody UserDTO userDTO) {
         if (userDTO.getRole() == null || userDTO.getRole().isEmpty()) {
@@ -50,6 +84,7 @@ public class UserController {
         return new ResponseEntity<>(userServices.convertToDTO(savedUser), HttpStatus.CREATED);
     }
 
+    // Obtener admin user por ID
     @GetMapping("/admin/{id}")
     public ResponseEntity<AdminUserDTO> getAdminUserById(@PathVariable int id) {
         User user = userServices.findById(id);
@@ -57,6 +92,7 @@ public class UserController {
         return ResponseEntity.ok(adminUserDTO);
     }
 
+    // Crear un admin user
     @PostMapping("/admin")
     public ResponseEntity<AdminUserDTO> createAdminUser(@Validated @RequestBody AdminUserDTO adminUserDTO) {
         User user = userServices.convertToEntity(adminUserDTO);
@@ -64,32 +100,7 @@ public class UserController {
         return new ResponseEntity<>(userServices.convertToAdminDTO(savedUser), HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        try {
-            // Intentar autenticar al usuario con el email y la contraseña proporcionados
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        } catch (Exception e) {
-            // Si la autenticación falla, devolver un estado 401 (No autorizado)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); 
-        }
-
-        // Generar un token JWT para el usuario autenticado
-        String token = jwtUtil.generateToken(loginRequest.getEmail());
-
-        // Autenticar al usuario y obtener el usuario autenticado
-        User user = userService.getUserByEmail(loginRequest.getEmail());
-        
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        // Crear una respuesta de inicio de sesión con el objeto User y el token
-        LoginResponse loginResponse = new LoginResponse(token);
-        return ResponseEntity.ok(loginResponse);
-    }
-
+    // Método para cerrar sesión
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
         return ResponseEntity.ok("Logout successful");

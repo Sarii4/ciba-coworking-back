@@ -13,7 +13,9 @@ import com.cibacoworking.cibacoworking.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DTOMapper {
@@ -27,8 +29,7 @@ public class DTOMapper {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    
-    //Convertimos User a DTO
+    // Convertimos User a DTO
     public UserDTO convertToDTO(User user) {
         return new UserDTO(
             user.getId(),
@@ -40,7 +41,7 @@ public class DTOMapper {
         );
     }
 
-    //Convertimos userDTO a User
+    // Convertimos userDTO a User
     public User convertToEntity(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
@@ -51,8 +52,7 @@ public class DTOMapper {
         return user;
     }
 
-
-    //Convertimos AdminUserDTO a User
+    // Convertimos AdminUserDTO a User
     public User convertToEntity(AdminUserDTO adminUserDTO) {
         User user = new User();
         user.setId(adminUserDTO.getId());
@@ -64,7 +64,7 @@ public class DTOMapper {
         return user;
     }
 
-    //Convertimos User a AdminUserDTO
+    // Convertimos User a AdminUserDTO
     public AdminUserDTO convertToAdminDTO(User user) {
         return new AdminUserDTO(
             user.getId(),
@@ -77,18 +77,17 @@ public class DTOMapper {
         );
     }
 
-    //Obtenemos user po Id
+    // Obtenemos user por Id
     public User findById(int id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    //Guardamos User
+    // Guardamos User
     public User save(User user) {
         return userRepository.save(user);
     }
 
-    
-    //Convertimos Space a SpaceDTO
+    // Convertimos Space a SpaceDTO
     public SpaceDTO convertToDTO(Space space) {
         return new SpaceDTO(
             space.getId(), 
@@ -99,7 +98,7 @@ public class DTOMapper {
         );
     }
 
-    //Convertimos SpaceDTO a Space
+    // Convertimos SpaceDTO a Space
     public Space convertToEntity(SpaceDTO spaceDTO) {
         Space space = new Space();
         space.setId(spaceDTO.getId());
@@ -110,12 +109,12 @@ public class DTOMapper {
         return space;
     }
 
-    //Guardamos Space
+    // Guardamos Space
     public Space saveSpace(Space space) {
         return spaceRepository.save(space);
     }
 
-    //Convertimos Reservation a ReservationDTO
+    // Convertimos Reservation a ReservationDTO
     public ReservationDTO convertToDTO(Reservation reservation) {
         return new ReservationDTO (
             reservation.getId(), 
@@ -128,10 +127,10 @@ public class DTOMapper {
         );
     }
 
-    //Convertimos ReservationDTO a Reservation
+    // Convertimos ReservationDTO a Reservation
     public Reservation convertToEntity(ReservationDTO reservationDTO) {
         Reservation reservation = new Reservation();
-        //reservation.setId(reservationDTO.getId());
+        // reservation.setId(reservationDTO.getId()); // Descomentar si necesitas establecer el ID
         reservation.setStartDate(reservationDTO.getStartDate());
         reservation.setEndDate(reservationDTO.getEndDate());
         reservation.setStartTime(reservationDTO.getStartTime());
@@ -154,8 +153,15 @@ public class DTOMapper {
         return reservation;
     }
 
-    //Guardamos reserva
+    // Guardamos reserva
     public Reservation saveReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
+    }
+
+    // Método para convertir una lista de Space a una lista de SpaceDTO
+    public List<SpaceDTO> convertToDTOs(List<Space> spaces) {
+        return spaces.stream()
+                     .map(this::convertToDTO)
+                     .collect(Collectors.toList());
     }
 }

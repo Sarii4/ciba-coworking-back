@@ -45,7 +45,7 @@ public class RoleController {
         }
         role.setId(id);
         Role updatedRole = roleService.saveRole(role);
-        return new ResponseEntity<>(updatedRole, HttpStatus.OK);
+        return ResponseEntity.ok(updatedRole);
     }
 
     @DeleteMapping("/{id}")

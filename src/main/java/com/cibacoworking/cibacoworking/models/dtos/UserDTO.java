@@ -1,11 +1,24 @@
 package com.cibacoworking.cibacoworking.models.dtos;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 public class UserDTO {
     private int id;
+
+    @NotBlank(message = "Name cannot be empty")
     private String name;
+
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email cannot be empty")
     private String email;
+
+    @NotBlank(message = "Phone cannot be empty")
     private String phone;
+
     private String projectName;
+
+    @NotBlank(message = "Role cannot be empty")
     private String role; 
 
     public UserDTO() {}
@@ -65,5 +78,17 @@ public class UserDTO {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

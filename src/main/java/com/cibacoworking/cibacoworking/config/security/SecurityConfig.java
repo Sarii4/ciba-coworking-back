@@ -20,11 +20,14 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.cibacoworking.cibacoworking.services.CustomUserDetailsService;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     @Bean
@@ -33,9 +36,10 @@ public class SecurityConfig {
         http    
             .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/users/login").permitAll()
-                .requestMatchers("/api/users/register").permitAll()
+            .authorizeHttpRequests(authrequest -> 
+                authrequest
+                .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/courses").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/courses").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/courses/**").hasRole("ADMIN")
@@ -43,12 +47,12 @@ public class SecurityConfig {
                 .anyRequest().authenticated())
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationProvider(authenticationProvider)
+            .authenticationProvider(authenticationProvider) 
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
     }
-
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

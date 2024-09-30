@@ -42,7 +42,7 @@ public class JwtUtil {
             throw new RuntimeException("Token ha expirado", e);
         } catch (MalformedJwtException e) {
             throw new RuntimeException("Token malformado", e);
-        } catch (io.jsonwebtoken.security.SecurityException e) {  // Cambiado a SecurityException
+        } catch (io.jsonwebtoken.security.SecurityException e) {  
             throw new RuntimeException("Firma del token inválida", e);
         } catch (Exception e) {
             throw new RuntimeException("Error al procesar el token", e);
