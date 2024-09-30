@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.dtos.DTOMapper;
+import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
 import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 import com.cibacoworking.cibacoworking.models.dtos.UserRegistrationDTO;
 import com.cibacoworking.cibacoworking.models.entities.Role;
@@ -25,13 +25,15 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final DTOMapper dtoMapper;
+    private final ReservationService reservationService;
 
     public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository,
-            RoleRepository roleRepository, DTOMapper dtoMapper) {
+            RoleRepository roleRepository, DTOMapper dtoMapper, ReservationService reservationService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.dtoMapper = dtoMapper;
+        this.reservationService = reservationService;
 
         System.out.println("PasswordEncoder injected: " + (passwordEncoder != null));
     }
@@ -56,22 +58,12 @@ public class UserServiceImpl implements UserService {
             try {
                 User user = dtoMapper.convertToEntity(userRegistrationDTO);
 
-                // save rol como User
+                // guardar rol como User
                 Optional<Role> role = roleRepository.findById(2);
-                if (role.isEmpty()) {
-                    throw new CibaCoworkingException("Role not found", HttpStatus.INTERNAL_SERVER_ERROR);
-                }
                 Role userRole = role.get();
                 user.setRole(userRole);
 
                 // encriptar la contraseña
-
-                System.out.println("Password provided: " + userRegistrationDTO.getPassword());
-
-                // Check if password is null or empty
-                if (userRegistrationDTO.getPassword() == null || userRegistrationDTO.getPassword().isEmpty()) {
-                    throw new CibaCoworkingException("Password is required", HttpStatus.BAD_REQUEST);
-                }
                 user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
 
                 User savedUser = userRepository.save(user);
@@ -89,29 +81,6 @@ public class UserServiceImpl implements UserService {
         return userOpt.isEmpty();
     }
 
-    /*
-     * public UserDTO createUser(UserRegistrationDTO userRegistrationDTO) throws
-     * CibaCoworkingException {
-     * 
-     * if (isEmailAvailable(userRegistrationDTO.getEmail())) {
-     * try {
-     * User user = dtoMapper.convertToEntity(userRegistrationDTO);
-     * 
-     * // Hash the password before saving
-     * user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
-     * 
-     * User savedUser = userRepository.save(user);
-     * return dtoMapper.convertToDTO(savedUser);
-     * } catch (Exception e) {
-     * throw new CibaCoworkingException("No s'ha pogut crear l'usuari",
-     * HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     * } else {
-     * throw new CibaCoworkingException("Aquest email ja s'està utilitzant.",
-     * HttpStatus.BAD_REQUEST);
-     * }
-     * }
-     */
 
     // Obtener usuario por su id
     public UserDTO getUserById(int id) throws CibaCoworkingException {
@@ -144,7 +113,25 @@ public class UserServiceImpl implements UserService {
             throw new CibaCoworkingException("No s'ha pogut actualitzar l'usuari", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-}
 // Si al modificar no se modifica contraseña debe usar la ya existente
 
 // borrar usuario por id
+public void deleteUser(int id) throws CibaCoworkingException {
+    Optional<User> userOpt = userRepository.findById(id);
+
+    if (!userOpt.isPresent()) {
+        throw new CibaCoworkingException("No s'ha trobat l'usuari per eliminar", HttpStatus.NOT_FOUND);
+    }
+
+    // Obtener las reservas activas del usuario 
+    List<ReservationDTO> userReservations = reservationService.getReservationsByUser(id);
+
+    try {
+        userRepository.deleteById(id);
+    } catch (Exception e) {
+        throw new CibaCoworkingException("No s'ha pogut eliminar l'usuari", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
+}
+
