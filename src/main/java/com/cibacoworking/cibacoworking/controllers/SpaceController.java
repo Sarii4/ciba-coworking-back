@@ -54,15 +54,5 @@ public class SpaceController {
         return ResponseEntity.ok(spaceDTO);
     }
 
-    @GetMapping("/trigger-update-reservations")
-    public ResponseEntity<String> triggerUpdateReservations() {
-        try {
-            spaceService.updateExpiredReservations();
-            return ResponseEntity.ok("Reservations updated successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
-        }
-    }
-
     
 }

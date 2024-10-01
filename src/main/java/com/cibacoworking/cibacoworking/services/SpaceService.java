@@ -14,5 +14,4 @@ public interface SpaceService {
     boolean checkTableStatus(int spaceId);
     void updateTableStatus(int id, String newStatus) throws CibaCoworkingException;
     List<ReservationDTO> getTablesWithReservations(LocalDate startDate, LocalDate endDate) throws CibaCoworkingException;
-    void updateExpiredReservations() throws CibaCoworkingException;
 }
