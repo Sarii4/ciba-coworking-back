@@ -20,59 +20,55 @@ import com.cibacoworking.cibacoworking.repositories.SpaceRepository;
 
 @Service
 public class SpaceServiceImpl implements SpaceService {
-    
-    @Autowired 
+
+    @Autowired
     private SpaceRepository spaceRepository;
 
     @Autowired
     private DTOMapper dtoMapper;
 
-    // Obtener todas las mesas disponibles con información completa por fechas concretas
-    public List<SpaceDTO> getAllAvailableTablesByDate(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) throws CibaCoworkingException {
+    // Obtener todas las mesas disponibles con información completa por fechas concretas   
+    public List<SpaceDTO> getAllAvailableTablesByDate(LocalDate startDate, LocalDate endDate, LocalTime startTime,
+            LocalTime endTime) throws CibaCoworkingException {
         List<Space> tablesByDate = spaceRepository.findAvailableTablesByDate(startDate, endDate, startTime, endTime);
-        
         return tablesByDate.stream()
                 .map(dtoMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
-
     // Obtener las mesas reservadas e inactivas con información de las reservas por fechas concretas
-    public List<ReservationDTO> getTablesWithReservations(LocalDate startDate, LocalDate endDate) throws CibaCoworkingException {
-    List<Reservation> tablesWithReservations = spaceRepository.findTablesWithReservations(startDate, endDate);
-    
-    return tablesWithReservations.stream()
+    public List<ReservationDTO> getTablesWithReservations(LocalDate startDate, LocalDate endDate)
+            throws CibaCoworkingException {
+        List<Reservation> tablesWithReservations = spaceRepository.findTablesWithReservations(startDate, endDate);
+
+        return tablesWithReservations.stream()
                 .map(dtoMapper::convertToDTO)
                 .collect(Collectors.toList());
-}
-
-
-    //Obtener detalles de un espacio por su Id
+    }
+    // Obtener detalles de un espacio por su Id
     public SpaceDTO getSpaceById(int spaceId) {
         Space space = spaceRepository.findById(spaceId).orElse(null);
         return dtoMapper.convertToDTO(space);
     }
-
-    //Comprobar el estatus de una mesa por su Id
+    // Comprobar el estatus de una mesa por su Id
     public boolean checkTableStatus(int spaceId) {
         String tableStatus = spaceRepository.findSpaceStatusById(spaceId);
         return "actiu".equals(tableStatus);
     }
-
-    //Cambiar el estatus de una mesa por su Id
+    // Cambiar el estatus de una mesa por su Id
     public void updateTableStatus(int id, String newStatus) throws CibaCoworkingException {
         Optional<Space> spaceOpt = spaceRepository.findById(id);
         if (!spaceOpt.isPresent()) {
             throw new CibaCoworkingException("No s'ha trobat la taula per actualitzar", HttpStatus.NOT_FOUND);
         }
-    
         try {
             Space existingTable = spaceOpt.get();
             existingTable.setSpaceStatus(newStatus);
             spaceRepository.save(existingTable);
         } catch (Exception e) {
-            throw new CibaCoworkingException("No s'ha pogut actualitzar l'estat de la taula", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CibaCoworkingException("No s'ha pogut actualitzar l'estat de la taula",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    
+
     }
-    
+
 }

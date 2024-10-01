@@ -1,7 +1,6 @@
 package com.cibacoworking.cibacoworking.services;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ public interface ReservationService {
     ReservationDTO getReservationById(int id) throws CibaCoworkingException;
     ReservationDTO createLongTermReservation(ReservationDTO reservationDTO) throws CibaCoworkingException;
     ReservationDTO createReservationOffices(ReservationDTO reservationDTO) throws CibaCoworkingException;
-    boolean isTableAvailable(int spaceId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime);
     ReservationDTO createReservationTablesByUser(ReservationDTO reservationDTO) throws CibaCoworkingException ;
     ReservationDTO updateReservation(int id, ReservationDTO reservationDTO) throws CibaCoworkingException;
     ResponseEntity<Object> deleteReservation(int id) throws CibaCoworkingException;

@@ -36,7 +36,6 @@ public class ReservationController {
     }
 
     // Crear reserva oficinas y sala
-
     @PostMapping(ConstantsSecurity.CREATE_RESERVATION_OFFICES)
     public ResponseEntity<ReservationDTO> createReservationOffices(@RequestBody ReservationDTO reservationDTO)
             throws CibaCoworkingException {
