@@ -1,13 +1,8 @@
-package com.cibacoworking.cibacoworking.services;
+package com.cibacoworking.cibacoworking.models.dtos;
 
-import com.cibacoworking.cibacoworking.models.dtos.AdminUserDTO;
-import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
-import com.cibacoworking.cibacoworking.models.dtos.SpaceDTO;
-import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.models.entities.Space;
 import com.cibacoworking.cibacoworking.models.entities.User;
-import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
 import com.cibacoworking.cibacoworking.repositories.SpaceRepository;
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +18,6 @@ public class DTOMapper {
 
     @Autowired
     private SpaceRepository spaceRepository;
-
-    @Autowired
-    private ReservationRepository reservationRepository;
-
     
     //Convertimos User a DTO
     public UserDTO convertToDTO(User user) {
@@ -50,31 +41,26 @@ public class DTOMapper {
         user.setProjectName(userDTO.getProjectName());
         return user;
     }
-
-
-    //Convertimos AdminUserDTO a User
-    public User convertToEntity(AdminUserDTO adminUserDTO) {
-        User user = new User();
-        user.setId(adminUserDTO.getId());
-        user.setName(adminUserDTO.getName());
-        user.setEmail(adminUserDTO.getEmail());
-        user.setPassword(adminUserDTO.getPassword()); 
-        user.setPhone(adminUserDTO.getPhone());
-        user.setProjectName(adminUserDTO.getProjectName());
-        return user;
-    }
-
-    //Convertimos User a AdminUserDTO
-    public AdminUserDTO convertToAdminDTO(User user) {
-        return new AdminUserDTO(
-            user.getId(),
+   
+    //Convertimos User a userRegistrationDTO
+    public UserRegistrationDTO convertToRegistrationDTO(User user) {
+        return new UserRegistrationDTO(
             user.getName(),
             user.getEmail(),
-            user.getPassword(),
             user.getPhone(),
             user.getProjectName(),
-            (user.getRole() != null) ? user.getRole().getRol() : null  
-        );
+            user.getPassword());
+    }
+
+    //Convertimos userRegistrationDTO a User
+    public User convertToEntity(UserRegistrationDTO userRegistrationDTO) {
+        User user = new User();
+        user.setName(userRegistrationDTO.getName());
+        user.setEmail(userRegistrationDTO.getEmail());
+        user.setPhone(userRegistrationDTO.getPhone());
+        user.setProjectName(userRegistrationDTO.getProjectName());
+        user.setPassword(userRegistrationDTO.getPassword());
+        return user;
     }
 
     //Obtenemos user po Id
@@ -154,8 +140,4 @@ public class DTOMapper {
         return reservation;
     }
 
-    //Guardamos reserva
-    public Reservation saveReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
-    }
 }

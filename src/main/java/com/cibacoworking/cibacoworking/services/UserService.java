@@ -1,41 +1,18 @@
 package com.cibacoworking.cibacoworking.services;
 
-import com.cibacoworking.cibacoworking.models.entities.User;
-import com.cibacoworking.cibacoworking.repositories.UserRepository; 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-import java.util.Optional;
-import java.util.ArrayList; 
+import org.springframework.http.ResponseEntity;
 
-@Service
-public class UserService implements UserDetailsService {
+import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
+import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
+import com.cibacoworking.cibacoworking.models.dtos.UserRegistrationDTO;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    public User getUserByEmail(String email) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        return userOptional.orElse(null);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = getUserByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with email: " + email);
-        }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
-    }
+public interface UserService {
+    List<UserDTO> getAllUsers() throws CibaCoworkingException;
+    UserDTO getUserById(int id) throws CibaCoworkingException;
+    UserDTO createUser(UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException;
+    UserDTO updateUser(int id, UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException;
+    ResponseEntity<Object> deleteUser(int id) throws CibaCoworkingException;
     
-    public User authenticateUser(String email, String password) {
-        User user = getUserByEmail(email);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
-        }
-        return null;
-    }
 }
