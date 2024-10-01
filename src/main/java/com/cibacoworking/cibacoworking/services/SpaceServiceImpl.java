@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
@@ -16,6 +17,7 @@ import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
 import com.cibacoworking.cibacoworking.models.dtos.SpaceDTO;
 import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.models.entities.Space;
+import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
 import com.cibacoworking.cibacoworking.repositories.SpaceRepository;
 
 @Service
@@ -23,6 +25,9 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Autowired
     private SpaceRepository spaceRepository;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @Autowired
     private DTOMapper dtoMapper;
@@ -69,6 +74,24 @@ public class SpaceServiceImpl implements SpaceService {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    //Programar caducidad del status 'inactiu' de mesa individual
+    @Scheduled(cron = "0 0 0 * * ?") // Runs every day at midnight
+    public void updateExpiredReservations() throws CibaCoworkingException {
+        LocalDate today = LocalDate.now();
+
+        // Fetch all expired reservations where endDate is before today
+        List<Reservation> expiredReservations = reservationRepository.findByEndDateBefore(today);
+
+        for (Reservation reservation : expiredReservations) {
+            boolean isTableInactive = !checkTableStatus(reservation.getSpace().getId());
+
+            if (isTableInactive) {
+                // Set the table status to "actiu"
+                updateTableStatus(reservation.getSpace().getId(), "actiu");
+            }
+        }
     }
 
 }

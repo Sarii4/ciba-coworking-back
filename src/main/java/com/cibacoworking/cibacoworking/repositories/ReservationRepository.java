@@ -44,4 +44,6 @@ List<Reservation> findConflictingReservations(
         @Param("endTime") LocalTime endTime
     );
 
+    List<Reservation> findByEndDateBefore(LocalDate date);
+
     }
