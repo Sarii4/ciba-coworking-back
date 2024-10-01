@@ -29,12 +29,11 @@ public class UserController {
         return ResponseEntity.ok(userDTOs);
     }
 
-    /* 
-    @GetMapping(ConstantsSecurity.GET_ALL_USERS)
-    public UserDTO getAllUser(@PathVariable int id) {
-        User user = userServices.findById(id);
-        return userServices.convertToDTO(user);
-    } */
+    @GetMapping(ConstantsSecurity.GET_USER_BY_ID)
+    public ResponseEntity<UserDTO> getUserById(@PathVariable int userId) throws CibaCoworkingException {
+        UserDTO userDTO = userService.getUserById(userId);
+        return ResponseEntity.ok(userDTO);
+    }
 
     @PostMapping(ConstantsSecurity.CREATE_USER)
     public ResponseEntity<UserDTO> createUser(@RequestBody UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException {
@@ -43,18 +42,20 @@ public class UserController {
        
     }
 
-   
-
-    /* @GetMapping("/admin/{id}")
-    public AdminUserDTO getAdminUserById(@PathVariable int id) {
-        User user = userService.findById(id);
-        return userService.convertToAdminDTO(user);
+   @DeleteMapping(ConstantsSecurity.DELETE_USER)
+   public ResponseEntity<String> deleteUser(@PathVariable int userId) throws CibaCoworkingException {
+        userService.deleteUser(userId);
+        return ResponseEntity.ok("S'ha eliminat amb èxit");
     }
 
-    @PostMapping("/admin")
-    public AdminUserDTO createAdminUser(@RequestBody AdminUserDTO adminUserDTO) {
-        User user = userService.convertToEntity(adminUserDTO);
-        User savedUser = userService.save(user);
-        return userService.convertToAdminDTO(savedUser);
-    } */
+    
+    @PutMapping(ConstantsSecurity.UPDATE_USER)
+    public ResponseEntity<UserDTO> updateUser(
+            @PathVariable int userId,
+            @RequestBody UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException {
+
+        UserDTO updatedUser = userService.updateUser(userId, userRegistrationDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+    }
+
 }

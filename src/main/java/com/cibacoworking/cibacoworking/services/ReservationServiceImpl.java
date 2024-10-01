@@ -70,7 +70,7 @@ public class ReservationServiceImpl implements ReservationService {
     // CREAR RESERVAS
     // Crear una reserva a largo plazo por administrador de mesas individuales
     public ReservationDTO createLongTermReservation(ReservationDTO reservationDTO) throws CibaCoworkingException {
-        
+
         ReservationPastDateValidator(reservationDTO.getEndDate());
         ReservationYearValidator(reservationDTO.getEndDate());
 
@@ -111,14 +111,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     }
 
-    // Verificar la disponibilidad de mesa individual
-    public boolean isTableAvailable(int spaceId, LocalDate startDate, LocalDate endDate, LocalTime startTime,
-            LocalTime endTime) {
-        List<Reservation> conflictingReservations = reservationRepository.findConflictingReservations(spaceId,
-                startDate, endDate, startTime, endTime);
-        return conflictingReservations.isEmpty();
-    }
-
     // Crear una nueva reserva de mesas individuales por el usuario
     public ReservationDTO createReservationTablesByUser(ReservationDTO reservationDTO) throws CibaCoworkingException {
 
@@ -144,50 +136,16 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
-
-    //VALIDACIONES PARA RESERVAS
-    // Validar que la reserva no puede superar el 31 de diciembre del año en curso
-    public static void ReservationYearValidator(LocalDate endDate) throws CibaCoworkingException {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate endOfYear = LocalDate.of(currentDate.getYear(), 12, 31);
-
-        if (endDate.isAfter(endOfYear)) {
-            throw new CibaCoworkingException(
-                    "La data de finalització de la reserva no pot ser posterior al 31 de desembre de l'any actual.",
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // Validar que no se puede hacer la reserva si supera la fecha pasada
-    public static void ReservationPastDateValidator(LocalDate endDate) throws CibaCoworkingException {
-        LocalDate currentDate = LocalDate.now();
-        if (endDate.isBefore(currentDate)) {
-            throw new CibaCoworkingException("No es pot fer una reserva per una data ja passada.",
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    //Validar que la duraci'on de la reserva puede ser como máximo 7 días
-    public static void validateReservationDuration(LocalDate startDate, LocalDate endDate) throws CibaCoworkingException {
-        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
-
-        if (daysBetween > 7) {
-            throw new CibaCoworkingException("La reserva no pot ser per un període superior a 7 dies. Si necesites un període més llarg consulta al administrador", HttpStatus.BAD_REQUEST);
-        }
-    }
-
     // ACTUALIZAR una reserva existente
     public ReservationDTO updateReservation(int id, ReservationDTO reservationDTO) throws CibaCoworkingException {
         Optional<Reservation> reservationOpt = reservationRepository.findById(id);
         if (!reservationOpt.isPresent()) {
             throw new CibaCoworkingException("No s'ha trobat la reserva per actualitzar", HttpStatus.NOT_FOUND);
         }
-
         ReservationPastDateValidator(reservationDTO.getEndDate());
         ReservationYearValidator(reservationDTO.getEndDate());
-
         try {
-        
+
             Reservation existingReservation = reservationOpt.get();
             existingReservation.setStartDate(reservationDTO.getStartDate());
             existingReservation.setEndDate(reservationDTO.getEndDate());
@@ -200,7 +158,6 @@ public class ReservationServiceImpl implements ReservationService {
             throw new CibaCoworkingException("No s'ha pogut actualitzar la reserva", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     // ELIMINAR una reserva
     public ResponseEntity<Object> deleteReservation(int id) throws CibaCoworkingException {
         Optional<Reservation> reservationOpt = reservationRepository.findById(id);
@@ -219,6 +176,44 @@ public class ReservationServiceImpl implements ReservationService {
             return new ResponseEntity<>("S'ha eliminat amb èxit", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("No s'ha pogut eliminar la reserva", HttpStatus.BAD_REQUEST);
+        }
+    }
+    // VALIDACIONES PARA RESERVAS
+    // Verificar la disponibilidad de mesa individual
+    public boolean isTableAvailable(int spaceId, LocalDate startDate, LocalDate endDate, LocalTime startTime,
+            LocalTime endTime) {
+        List<Reservation> conflictingReservations = reservationRepository.findConflictingReservations(spaceId,
+                startDate, endDate, startTime, endTime);
+        return conflictingReservations.isEmpty();
+    }
+    // Validar que la reserva no puede superar el 31 de diciembre del año en curso
+    public static void ReservationYearValidator(LocalDate endDate) throws CibaCoworkingException {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate endOfYear = LocalDate.of(currentDate.getYear(), 12, 31);
+
+        if (endDate.isAfter(endOfYear)) {
+            throw new CibaCoworkingException(
+                    "La data de finalització de la reserva no pot ser posterior al 31 de desembre de l'any actual.",
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+    // Validar que no se puede hacer la reserva si supera la fecha pasada
+    public static void ReservationPastDateValidator(LocalDate endDate) throws CibaCoworkingException {
+        LocalDate currentDate = LocalDate.now();
+        if (endDate.isBefore(currentDate)) {
+            throw new CibaCoworkingException("No es pot fer una reserva per una data ja passada.",
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+    // Validar que la duración de la reserva puede ser como máximo 7 días
+    public static void validateReservationDuration(LocalDate startDate, LocalDate endDate)
+            throws CibaCoworkingException {
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+
+        if (daysBetween > 7) {
+            throw new CibaCoworkingException(
+                    "La reserva no pot ser per un període superior a 7 dies. Si necesites un període més llarg consulta a l'administrador",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 }
