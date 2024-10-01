@@ -1,10 +1,10 @@
-package com.cibacoworking.cibacoworking.models.dtos.auth;
+package com.cibacoworking.cibacoworking.auth;
 
-public class LoginResponse {
+public class AuthResponse {
     private String token;
 
     // Constructor
-    public LoginResponse(String token) {
+    public AuthResponse(String token) {
         this.token = token;
     }
 

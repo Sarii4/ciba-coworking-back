@@ -1,28 +1,24 @@
 package com.cibacoworking.cibacoworking.config;
 
 public class ConstantsSecurity {
-    //ENDPOINTS
+    // Constantes de ejemplo
+    public static final String SOME_CONSTANT = "some_value";
+    public static final String ANOTHER_CONSTANT = "another_value";
 
-    //front-end part
-    public static final String LOCALHOST_FRONT_URL = "http://localhost:5173";
+    // Constantes para roles
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+    public static final String ROLE_USER = "ROLE_USER";
 
-    //User actions
-    public static final String GET_RESERVATIONS_BY_USER = "/api/reservations/user/{userId}";
+    // Constantes para reservas
+    public static final String CREATE_RESERVATION_TABLES = "CREATE_RESERVATION_TABLES";
+    public static final String CREATE_RESERVATION_OFFICES = "CREATE_RESERVATION_OFFICES";
+    public static final String CREATE_LONG_TERM_RESERVATION_ADMIN = "CREATE_LONG_TERM_RESERVATION_ADMIN";
+    public static final String GET_RESERVATIONS_BY_USER = "GET_RESERVATIONS_BY_USER";
+    public static final String GET_RESERVATIONS_BY_SPACE_AND_DATE = "GET_RESERVATIONS_BY_SPACE_AND_DATE";
+    public static final String UPDATE_RESERVATION = "UPDATE_RESERVATION";
+    public static final String DELETE_RESERVATION = "DELETE_RESERVATION";
     
-    //Reservations
-
-    public static final String GET_RESERVATIONS_BY_SPACE_AND_DATE = "/api/spaces/{spaceId}/date-range";
-    
-    public static final String CREATE_RESERVATION_TABLES = "/api/reservations/create/tables";
-    public static final String CREATE_RESERVATION_OFFICES = "/api/reservations/create/offices";
-    public static final String UPDATE_RESERVATION = "/api/reservations/update/{reservationId}";
-    public static final String DELETE_RESERVATION = "/api/reservations/delete/{reservationId}";
-
-    //Admin reservations
-    //public static final String CREATE_RESERVATION_ADMIN = "/api/reservations/admin/create";
-    public static final String CREATE_LONG_TERM_RESERVATION_ADMIN = "/api/reservations/admin/create/longterm";
-    
-    // Espacios (spaces)
-
-
+    // Otras constantes que puedas necesitar
+    public static final String JWT_SECRET = "your_jwt_secret"; // Clave secreta para JWT
+    public static final long JWT_EXPIRATION = 86400000; // 1 día en milisegundos
 }

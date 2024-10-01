@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.controllers;
+package com.cibacoworking.cibacoworking.auth;
 
 import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
 import com.cibacoworking.cibacoworking.services.ReservationService;
@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.cibacoworking.cibacoworking.config.ConstantsSecurity;
 
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
-import com.cibacoworking.cibacoworking.config.ConstantsSecurity;
 import com.cibacoworking.cibacoworking.models.dtos.DateRangeRequestDTO;
 
 import java.util.List;

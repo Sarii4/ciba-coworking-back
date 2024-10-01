@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.controllers;
+package com.cibacoworking.cibacoworking.auth;
 
 import com.cibacoworking.cibacoworking.models.dtos.SpaceDTO;
 import com.cibacoworking.cibacoworking.models.entities.Space;

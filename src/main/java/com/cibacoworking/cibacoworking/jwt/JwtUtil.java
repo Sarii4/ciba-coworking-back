@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config.security;
+package com.cibacoworking.cibacoworking.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

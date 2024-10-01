@@ -1,10 +1,12 @@
 package com.cibacoworking.cibacoworking.models.entities;
 
+import com.cibacoworking.cibacoworking.models.dtos.RegisterRequest;
 import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -35,10 +37,19 @@ public class User implements UserDetails {
     @JoinColumn(name = "rol_id", nullable = false)
     private Role role;
 
+    // Constructor vacío
     public User() {}
 
-   
+    // Constructor para inicializar User desde RegisterRequest
+    public User(RegisterRequest request) {
+        this.name = request.getName();
+        this.email = request.getEmail();
+        this.password = request.getPassword();
+        this.phone = request.getPhone(); // Si tienes un campo phone en RegisterRequest
+        this.projectName = request.getProjectName(); // Si tienes un campo projectName
+    }
 
+    // Getters y Setters
     public int getId() {
         return id;
     }
@@ -128,5 +139,33 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    // Método toString (opcional, pero recomendable para depuración)
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", role=" + role +
+                '}';
+    }
+
+    // Método equals (opcional, útil si necesitas comparar usuarios)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    // Método hashCode (opcional, útil si necesitas almacenar usuarios en colecciones)
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
     }
 }

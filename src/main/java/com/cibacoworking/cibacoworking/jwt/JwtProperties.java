@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config.security;
+package com.cibacoworking.cibacoworking.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

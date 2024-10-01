@@ -48,9 +48,20 @@ public class UserService implements UserDetailsService {
 
     // Método para registrar un nuevo usuario
     public User registerUser(User user) {
-        // Codificar la contraseña
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+        // Si estás en un entorno de prueba, puedes hacer lo siguiente:
+        if (isTestEnvironment()) {
+            user.setPassword("{noop}" + user.getPassword());
+        } else {
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+        }
         return userRepository.save(user);
     }
+
+    // Método para verificar si estás en un entorno de prueba
+    private boolean isTestEnvironment() {
+        // Implementa tu lógica aquí para determinar si estás en un entorno de prueba
+        return false; // Cambia esto según tu implementación
+    }
 }
+
