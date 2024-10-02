@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
@@ -18,7 +21,7 @@ import com.cibacoworking.cibacoworking.repositories.RoleRepository;
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -31,9 +34,20 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.dtoMapper = dtoMapper;
-        System.out.println("PasswordEncoder injected: " + (passwordEncoder != null));
     }
 
+@Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+      User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("No s'ha trobat l'usuari amb aquest email: " + email));
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRole().getRol()) 
+                .build();
+    }
+    
     // Obtener todos usuarios para admin dashboard
     public List<UserDTO> getAllUsers() throws CibaCoworkingException {
         List<User> users = userRepository.findAll();
@@ -129,4 +143,4 @@ public class UserServiceImpl implements UserService {
         return password.length() == 8;
     }
 
-}
+}// esta ok
