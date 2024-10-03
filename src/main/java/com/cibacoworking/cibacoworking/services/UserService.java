@@ -1,51 +1,18 @@
 package com.cibacoworking.cibacoworking.services;
 
-import com.cibacoworking.cibacoworking.models.dtos.auth.LoginRequest;
-import com.cibacoworking.cibacoworking.models.entities.User;
-import com.cibacoworking.cibacoworking.repositories.UserRepository;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
+import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
+import com.cibacoworking.cibacoworking.models.dtos.UserRegistrationDTO;
 
-@Service
-public class UserService implements UserDetailsService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())  // El email se usa como "username"
-                .password(user.getPassword())
-                .authorities(user.getRole().getRol())  // Asegúrate de que el rol se devuelve correctamente
-                .accountExpired(false)
-                .accountLocked(false)
-                .credentialsExpired(false)
-                .disabled(false)
-                .build();
-    }
-
-    public User authenticate(LoginRequest loginRequest) throws CibaCoworkingException {
-        String email = loginRequest.getEmail();
-        String password = loginRequest.getPassword();
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CibaCoworkingException("Credenciales inválidas."));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new CibaCoworkingException("Credenciales inválidas.");
-        }
-
-        return user;  // Retorna el usuario autenticado
-    }
+public interface UserService {
+    List<UserDTO> getAllUsers() throws CibaCoworkingException;
+    UserDTO getUserById(int id) throws CibaCoworkingException;
+    UserDTO createUser(UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException;
+    UserDTO updateUser(int id, UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException;
+    ResponseEntity<Object> deleteUser(int id) throws CibaCoworkingException;
+    
 }

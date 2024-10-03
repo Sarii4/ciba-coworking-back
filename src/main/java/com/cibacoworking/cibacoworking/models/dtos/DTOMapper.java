@@ -1,46 +1,35 @@
-package com.cibacoworking.cibacoworking.services;
+package com.cibacoworking.cibacoworking.models.dtos;
 
-import com.cibacoworking.cibacoworking.models.dtos.AdminUserDTO;
-import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
-import com.cibacoworking.cibacoworking.models.dtos.SpaceDTO;
-import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.models.entities.Space;
 import com.cibacoworking.cibacoworking.models.entities.User;
-import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
 import com.cibacoworking.cibacoworking.repositories.SpaceRepository;
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class DTOMapper {
 
-    @Autowired
-    private UserRepository userRepository;
+  
+    private final UserRepository userRepository;
+    private final SpaceRepository spaceRepository;
 
-    @Autowired
-    private SpaceRepository spaceRepository;
-
-    @Autowired
-    private ReservationRepository reservationRepository;
-
-    
-    //Convertimos User a DTO
     public UserDTO convertToDTO(User user) {
         return new UserDTO(
-            user.getId(),
-            user.getName(),
-            user.getEmail(),
-            user.getPhone(),
-            user.getProjectName(),
-            (user.getRole() != null) ? user.getRole().getRol() : null  
-        );
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getProjectName(),
+                (user.getRole() != null) ? user.getRole().getRol() : null);
     }
 
-    //Convertimos userDTO a User
     public User convertToEntity(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
@@ -51,55 +40,42 @@ public class DTOMapper {
         return user;
     }
 
+    public UserRegistrationDTO convertToRegistrationDTO(User user) {
+        return new UserRegistrationDTO(
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getProjectName(),
+                user.getPassword());
+    }
 
-    //Convertimos AdminUserDTO a User
-    public User convertToEntity(AdminUserDTO adminUserDTO) {
+    public User convertToEntity(UserRegistrationDTO userRegistrationDTO) {
         User user = new User();
-        user.setId(adminUserDTO.getId());
-        user.setName(adminUserDTO.getName());
-        user.setEmail(adminUserDTO.getEmail());
-        user.setPassword(adminUserDTO.getPassword()); 
-        user.setPhone(adminUserDTO.getPhone());
-        user.setProjectName(adminUserDTO.getProjectName());
+        user.setName(userRegistrationDTO.getName());
+        user.setEmail(userRegistrationDTO.getEmail());
+        user.setPhone(userRegistrationDTO.getPhone());
+        user.setProjectName(userRegistrationDTO.getProjectName());
+        user.setPassword(userRegistrationDTO.getPassword());
         return user;
     }
 
-    //Convertimos User a AdminUserDTO
-    public AdminUserDTO convertToAdminDTO(User user) {
-        return new AdminUserDTO(
-            user.getId(),
-            user.getName(),
-            user.getEmail(),
-            user.getPassword(),
-            user.getPhone(),
-            user.getProjectName(),
-            (user.getRole() != null) ? user.getRole().getRol() : null  
-        );
-    }
-
-    //Obtenemos user po Id
     public User findById(int id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    //Guardamos User
     public User save(User user) {
         return userRepository.save(user);
     }
 
-    
-    //Convertimos Space a SpaceDTO
     public SpaceDTO convertToDTO(Space space) {
         return new SpaceDTO(
-            space.getId(), 
-            space.getName(), 
-            space.getSpaceType(), 
-            space.getSpaceStatus(), 
-            space.getDescription()
-        );
+                space.getId(),
+                space.getName(),
+                space.getSpaceType(),
+                space.getSpaceStatus(),
+                space.getDescription());
     }
 
-    //Convertimos SpaceDTO a Space
     public Space convertToEntity(SpaceDTO spaceDTO) {
         Space space = new Space();
         space.setId(spaceDTO.getId());
@@ -110,28 +86,24 @@ public class DTOMapper {
         return space;
     }
 
-    //Guardamos Space
     public Space saveSpace(Space space) {
         return spaceRepository.save(space);
     }
 
-    //Convertimos Reservation a ReservationDTO
     public ReservationDTO convertToDTO(Reservation reservation) {
-        return new ReservationDTO (
-            reservation.getId(), 
-            reservation.getStartDate(), 
-            reservation.getEndDate(), 
-            reservation.getStartTime(), 
-            reservation.getEndTime(),
-            convertToDTO(reservation.getUser()),
-            convertToDTO(reservation.getSpace())
-        );
+        return new ReservationDTO(
+                reservation.getId(),
+                reservation.getStartDate(),
+                reservation.getEndDate(),
+                reservation.getStartTime(),
+                reservation.getEndTime(),
+                convertToDTO(reservation.getUser()),
+                convertToDTO(reservation.getSpace()));
     }
 
-    //Convertimos ReservationDTO a Reservation
     public Reservation convertToEntity(ReservationDTO reservationDTO) {
         Reservation reservation = new Reservation();
-        //reservation.setId(reservationDTO.getId());
+
         reservation.setStartDate(reservationDTO.getStartDate());
         reservation.setEndDate(reservationDTO.getEndDate());
         reservation.setStartTime(reservationDTO.getStartTime());
@@ -154,8 +126,4 @@ public class DTOMapper {
         return reservation;
     }
 
-    //Guardamos reserva
-    public Reservation saveReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
-    }
 }

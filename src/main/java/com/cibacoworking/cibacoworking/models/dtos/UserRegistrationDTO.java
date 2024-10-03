@@ -1,3 +1,4 @@
+
 package com.cibacoworking.cibacoworking.models.dtos;
 
 import lombok.AllArgsConstructor;
@@ -9,12 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserDTO {
-    private int id;
+public class UserRegistrationDTO {
     private String name;
     private String email;
     private String phone;
     private String projectName;
-    private String role;
-
+    private String password;
 }

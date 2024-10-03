@@ -1,7 +1,6 @@
 
 package com.cibacoworking.cibacoworking.models.entities;
 
-
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -12,7 +11,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "spaces")
 public class Space {
@@ -36,53 +43,4 @@ public class Space {
     @OneToMany(mappedBy = "space", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
-    public Space() {}
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSpaceType() {
-        return spaceType;
-    }
-
-    public void setSpaceType(String spaceType) {
-        this.spaceType = spaceType;
-    }
-
-    public String getSpaceStatus() {
-        return spaceStatus;
-    }
-
-    public void setSpaceStatus(String spaceStatus) {
-        this.spaceStatus = spaceStatus;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
 }
