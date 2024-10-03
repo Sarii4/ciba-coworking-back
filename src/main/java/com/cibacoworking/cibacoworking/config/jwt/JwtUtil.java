@@ -37,7 +37,7 @@ public class JwtUtil {
                         .collect(Collectors.toList()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2))
-                .signWith(getSigninKey(), SignatureAlgorithm.HS256)//Es posible que se deba subir a HS512
+                .signWith(getSigninKey(), SignatureAlgorithm.HS256)
                 .compact();
     } 
 

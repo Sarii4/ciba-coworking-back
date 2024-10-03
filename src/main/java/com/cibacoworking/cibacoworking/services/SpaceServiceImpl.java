@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class SpaceServiceImpl implements SpaceService {
     private final ReservationRepository reservationRepository;
     private final DTOMapper dtoMapper;
 
- 
+    // Obtener todas las mesas disponibles con información completa por fechas concretas   
     public List<SpaceDTO> getAllAvailableTablesByDate(LocalDate startDate, LocalDate endDate, LocalTime startTime,
             LocalTime endTime) throws CibaCoworkingException {
         List<Space> tablesByDate = spaceRepository.findAvailableTablesByDate(startDate, endDate, startTime, endTime);
@@ -37,7 +38,7 @@ public class SpaceServiceImpl implements SpaceService {
                 .map(dtoMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
-  
+    // Obtener las mesas reservadas e inactivas con información de las reservas por fechas concretas
     public List<ReservationDTO> getTablesWithReservations(LocalDate startDate, LocalDate endDate)
             throws CibaCoworkingException {
         List<Reservation> tablesWithReservations = spaceRepository.findTablesWithReservations(startDate, endDate);
@@ -46,17 +47,17 @@ public class SpaceServiceImpl implements SpaceService {
                 .map(dtoMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
-
+    // Obtener detalles de un espacio por su Id
     public SpaceDTO getSpaceById(int spaceId) {
         Space space = spaceRepository.findById(spaceId).orElse(null);
         return dtoMapper.convertToDTO(space);
     }
-  
+    // Comprobar el estatus de una mesa por su Id
     public boolean checkTableStatus(int spaceId) {
         String tableStatus = spaceRepository.findSpaceStatusById(spaceId);
         return "actiu".equals(tableStatus);
     }
- 
+    // Cambiar el estatus de una mesa por su Id
     public void updateTableStatus(int id, String newStatus) throws CibaCoworkingException {
         Optional<Space> spaceOpt = spaceRepository.findById(id);
         if (!spaceOpt.isPresent()) {
@@ -73,8 +74,8 @@ public class SpaceServiceImpl implements SpaceService {
 
     }
 
-   
-    @Scheduled(cron = "0 0 0 * * ?") 
+    //Programar caducidad del status 'inactiu' de mesa individual
+    @Scheduled(cron = "0 0 0 * * ?")
     public void updateExpiredReservations() throws CibaCoworkingException {
         LocalDate today = LocalDate.now();
 
@@ -84,8 +85,7 @@ public class SpaceServiceImpl implements SpaceService {
             boolean isTableInactive = !checkTableStatus(reservation.getSpace().getId());
 
             if (isTableInactive) {
-          
-                updateTableStatus(reservation.getSpace().getId(), "actiu");
+               updateTableStatus(reservation.getSpace().getId(), "actiu");
             }
         }
     }
