@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             }
             try {
                 User user = dtoMapper.convertToEntity(userRegistrationDTO);
-                Optional<Role> role = roleRepository.findById(2);
+                Optional<Role> role = roleRepository.findById(2); //CAMBIAR A 1 A LA HORA DE CREAR ADMIN Y VOLVER A PONER 2 DESPUES
                 Role userRole = role.get();
                 user.setRole(userRole);
                 user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));

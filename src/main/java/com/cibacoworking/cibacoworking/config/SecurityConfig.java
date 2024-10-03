@@ -29,6 +29,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable()) 
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/admin/create/user").permitAll() //COMENTAR esa línea cuando el admin este registrado en BBDD
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/user/**").hasRole("USER")
