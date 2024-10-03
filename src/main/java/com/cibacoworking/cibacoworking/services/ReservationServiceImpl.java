@@ -6,29 +6,24 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.dtos.DTOMapper;
 import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
 import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private SpaceServiceImpl spaceService;
-
-    @Autowired
-    private DTOMapper dtoMapper;
+    private final ReservationRepository reservationRepository;
+    private final SpaceServiceImpl spaceService;
+    private final DTOMapper dtoMapper;
 
     // OBTENER RESERVAS
     // Obtener reservas por ID de espacio y fechas concretas

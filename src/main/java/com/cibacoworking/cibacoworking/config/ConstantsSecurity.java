@@ -3,8 +3,14 @@ package com.cibacoworking.cibacoworking.config;
 public class ConstantsSecurity {
     //ENDPOINTS
 
+    
     //front-end part
-    public static final String LOCALHOST_FRONT_URL = "http://localhost:5173";
+    public static final String ENDPOINT_FRONT_URL = "http://localhost:5173";
+
+    //login/logout
+    public static final String LOGIN_URL = "/auth/login";
+    public static final String LOGOUT_URL = "/auth/logout";
+
 
     //User actions
     public static final String GET_RESERVATIONS_BY_USER = "/api/reservations/user/{userId}";
