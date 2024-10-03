@@ -1,7 +1,6 @@
 package com.cibacoworking.cibacoworking.config.auth;
 
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +8,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import com.cibacoworking.cibacoworking.services.UserServiceImpl;
+
+import lombok.AllArgsConstructor;
+
 import com.cibacoworking.cibacoworking.config.jwt.JwtUtil;
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.dtos.DTOMapper;
@@ -16,19 +18,15 @@ import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 import com.cibacoworking.cibacoworking.models.entities.User;
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
 
+@AllArgsConstructor
 @Service
 public class AuthService {
 
-    @Autowired
-    private UserServiceImpl userServiceImpl;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private DTOMapper dtoMapper;
+    private final UserServiceImpl userServiceImpl;
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+    private final DTOMapper dtoMapper;
 
     public AuthResponse login(LoginRequest loginRequest) throws CibaCoworkingException {
         UserDetails userDetails = userServiceImpl.loadUserByUsername(loginRequest.getEmail());
@@ -51,5 +49,4 @@ public class AuthService {
 
     }
 
-    // falta logica logout
 }

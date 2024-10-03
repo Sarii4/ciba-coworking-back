@@ -33,7 +33,7 @@ public class CibaCoworkingResponseEntityExceptionHandler extends ResponseEntityE
     public ResponseEntity<BodyErrorMessage> handleConnectionError(DataAccessException ex) {
         BodyErrorMessage response = new BodyErrorMessage();
         response.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        response.setMessage("Error de conexiÃ³n con la base de datos: " + ex.getMessage());
+        response.setMessage("Error en la conexió de la base de dades: " + ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -41,21 +41,21 @@ public class CibaCoworkingResponseEntityExceptionHandler extends ResponseEntityE
     public ResponseEntity<BodyErrorMessage> handleGeneralException(Exception ex) {
         BodyErrorMessage message = new BodyErrorMessage();
         message.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        message.setMessage("Error inesperado " + ex.getMessage());
+        message.setMessage("Error inesperat " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
 
-        System.err.println("Authentication error: " + ex.getMessage());
-        return new ResponseEntity<>("Authentication failed: " + ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        System.err.println("Error d'autenticació: " + ex.getMessage());
+        return new ResponseEntity<>("Autenticació fallida: " + ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
 
-        System.err.println("Access denied: " + ex.getMessage());
-        return new ResponseEntity<>("Access denied: " + ex.getMessage(), HttpStatus.FORBIDDEN);
+        System.err.println("Accés denegat: " + ex.getMessage());
+        return new ResponseEntity<>("Accés denegat: " + ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

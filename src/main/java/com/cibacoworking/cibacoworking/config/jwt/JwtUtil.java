@@ -24,12 +24,10 @@ import java.util.List;
 public class JwtUtil {
     
     @Value("${JWT_SECRET_KEY}")
-
     private String SECRET_KEY;
 
-   
 
-      public String generateToken(String email) {
+    public String generateToken(String email) {
         List<GrantedAuthority> grantedAuthorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
         return Jwts.builder()
         .setId("userJWT")
@@ -41,7 +39,7 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2))
                 .signWith(getSigninKey(), SignatureAlgorithm.HS256)//Es posible que se deba subir a HS512
                 .compact();
-    } //entendemos
+    } 
 
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
@@ -50,12 +48,12 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
-    }//entendemos
+    }
 
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }//entendemos
+    }
 
     private boolean isTokenExpired(String token) {
         final Date expiration = Jwts.parserBuilder()
@@ -65,10 +63,10 @@ public class JwtUtil {
                 .getBody()
                 .getExpiration();
         return expiration.before(new Date());
-    }//entendemos
+    }
 
     private Key getSigninKey() {
         byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-}//fichero revisado y entendido
+}

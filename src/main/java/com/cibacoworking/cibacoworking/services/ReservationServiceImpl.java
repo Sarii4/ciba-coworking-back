@@ -6,32 +6,26 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.dtos.DTOMapper;
 import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
 import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    @Autowired
-    private ReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
+    private final SpaceServiceImpl spaceService;
+    private final DTOMapper dtoMapper;
 
-    @Autowired
-    private SpaceServiceImpl spaceService;
-
-    @Autowired
-    private DTOMapper dtoMapper;
-
-    // OBTENER RESERVAS
-    // Obtener reservas por ID de espacio y fechas concretas
+  
     public List<ReservationDTO> getReservationsBySpaceAndDate(int spaceId, LocalDate startDate, LocalDate endDate)
             throws CibaCoworkingException {
         List<Reservation> reservationsBySpace = reservationRepository.findReservationsBySpaceAndDate(spaceId, startDate,
@@ -44,7 +38,6 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
     }
 
-    // Obtener todas las reservas de un usuario por el id de usuario
     public List<ReservationDTO> getReservationsByUser(int userId) throws CibaCoworkingException {
         List<Reservation> reservations = reservationRepository.findByUserId(userId);
 
@@ -57,7 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
     }
 
-    // Obtener una reserva por su ID
+
     public ReservationDTO getReservationById(int id) throws CibaCoworkingException {
         Optional<Reservation> reservationOpt = reservationRepository.findById(id);
         if (!reservationOpt.isPresent()) {
@@ -67,8 +60,6 @@ public class ReservationServiceImpl implements ReservationService {
         return dtoMapper.convertToDTO(reservationOpt.get());
     }
 
-    // CREAR RESERVAS
-    // Crear una reserva a largo plazo por administrador de mesas individuales
     public ReservationDTO createLongTermReservation(ReservationDTO reservationDTO) throws CibaCoworkingException {
 
         ReservationPastDateValidator(reservationDTO.getEndDate());
@@ -87,7 +78,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
-    // Crear una nueva reserva por oficinas y sala
+
     public ReservationDTO createReservationOffices(ReservationDTO reservationDTO) throws CibaCoworkingException {
 
         ReservationPastDateValidator(reservationDTO.getEndDate());
@@ -111,7 +102,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     }
 
-    // Crear una nueva reserva de mesas individuales por el usuario
     public ReservationDTO createReservationTablesByUser(ReservationDTO reservationDTO) throws CibaCoworkingException {
 
         boolean isTableActive = spaceService.checkTableStatus(reservationDTO.getSpaceDTO().getId());
@@ -136,7 +126,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
-    // ACTUALIZAR una reserva existente
+
     public ReservationDTO updateReservation(int id, ReservationDTO reservationDTO) throws CibaCoworkingException {
         Optional<Reservation> reservationOpt = reservationRepository.findById(id);
         if (!reservationOpt.isPresent()) {
@@ -158,7 +148,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new CibaCoworkingException("No s'ha pogut actualitzar la reserva", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    // ELIMINAR una reserva
+
     public ResponseEntity<Object> deleteReservation(int id) throws CibaCoworkingException {
         Optional<Reservation> reservationOpt = reservationRepository.findById(id);
         if (!reservationOpt.isPresent()) {
@@ -178,15 +168,14 @@ public class ReservationServiceImpl implements ReservationService {
             return new ResponseEntity<>("No s'ha pogut eliminar la reserva", HttpStatus.BAD_REQUEST);
         }
     }
-    // VALIDACIONES PARA RESERVAS
-    // Verificar la disponibilidad de mesa individual
+  
     public boolean isTableAvailable(int spaceId, LocalDate startDate, LocalDate endDate, LocalTime startTime,
             LocalTime endTime) {
         List<Reservation> conflictingReservations = reservationRepository.findConflictingReservations(spaceId,
                 startDate, endDate, startTime, endTime);
         return conflictingReservations.isEmpty();
     }
-    // Validar que la reserva no puede superar el 31 de diciembre del año en curso
+  
     public static void ReservationYearValidator(LocalDate endDate) throws CibaCoworkingException {
         LocalDate currentDate = LocalDate.now();
         LocalDate endOfYear = LocalDate.of(currentDate.getYear(), 12, 31);
@@ -197,7 +186,7 @@ public class ReservationServiceImpl implements ReservationService {
                     HttpStatus.BAD_REQUEST);
         }
     }
-    // Validar que no se puede hacer la reserva si supera la fecha pasada
+    
     public static void ReservationPastDateValidator(LocalDate endDate) throws CibaCoworkingException {
         LocalDate currentDate = LocalDate.now();
         if (endDate.isBefore(currentDate)) {
@@ -205,7 +194,7 @@ public class ReservationServiceImpl implements ReservationService {
                     HttpStatus.BAD_REQUEST);
         }
     }
-    // Validar que la duración de la reserva puede ser como máximo 7 días
+   
     public static void validateReservationDuration(LocalDate startDate, LocalDate endDate)
             throws CibaCoworkingException {
         long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);

@@ -2,9 +2,7 @@ package com.cibacoworking.cibacoworking.services;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
-
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
 
@@ -17,5 +15,4 @@ public interface ReservationService {
     ReservationDTO createReservationTablesByUser(ReservationDTO reservationDTO) throws CibaCoworkingException ;
     ReservationDTO updateReservation(int id, ReservationDTO reservationDTO) throws CibaCoworkingException;
     ResponseEntity<Object> deleteReservation(int id) throws CibaCoworkingException;
-    
 } 

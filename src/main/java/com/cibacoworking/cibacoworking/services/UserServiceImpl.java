@@ -20,6 +20,9 @@ import com.cibacoworking.cibacoworking.models.entities.User;
 import com.cibacoworking.cibacoworking.repositories.RoleRepository;
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
@@ -28,13 +31,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleRepository roleRepository;
     private final DTOMapper dtoMapper;
 
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository,
-            RoleRepository roleRepository, DTOMapper dtoMapper, ReservationService reservationService) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.dtoMapper = dtoMapper;
-    }
 
 @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -48,7 +44,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .build();
     }
     
-    // Obtener todos usuarios para admin dashboard
+   
     public List<UserDTO> getAllUsers() throws CibaCoworkingException {
         List<User> users = userRepository.findAll();
         if (users.isEmpty()) {
@@ -59,7 +55,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    // crear un usuario(comprobar existencia mail)
+ 
     public UserDTO createUser(UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException {
         if (isEmailAvailable(userRegistrationDTO.getEmail())) {
             if (!isPasswordFormatValid(userRegistrationDTO.getPassword())) {
@@ -81,7 +77,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    // Obtener usuario por su id
     public UserDTO getUserById(int id) throws CibaCoworkingException {
         Optional<User> userOpt = userRepository.findById(id);
         if (!userOpt.isPresent()) {
@@ -90,7 +85,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return dtoMapper.convertToDTO(userOpt.get());
     }
 
-    // editar usuario por id
+
     public UserDTO updateUser(int id, UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException {
         Optional<User> userOpt = userRepository.findById(id);
         if (!userOpt.isPresent()) {
@@ -116,7 +111,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    // Borrar usuario por id
     public ResponseEntity<Object> deleteUser(int id) throws CibaCoworkingException {
         Optional<User> userOpt = userRepository.findById(id);
         if (!userOpt.isPresent()) {
@@ -143,4 +137,4 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return password.length() == 8;
     }
 
-}// esta ok
+}

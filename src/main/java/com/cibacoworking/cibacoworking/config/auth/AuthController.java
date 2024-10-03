@@ -6,17 +6,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
+
+import lombok.AllArgsConstructor;
+
 import com.cibacoworking.cibacoworking.config.ConstantsSecurity;
 
-
+@AllArgsConstructor
 @RestController
 public class AuthController {
 
     private final AuthService authService;
-   
-    public AuthController( AuthService authService) {
-        this.authService = authService;
-    }
+
 
     @PostMapping(ConstantsSecurity.LOGIN_URL)
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -28,7 +28,6 @@ public class AuthController {
         }
     }
 
-    //falta logout
 }
 
 

@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import com.cibacoworking.cibacoworking.services.UserServiceImpl;
 
 
-
 @Configuration
 public class JwtConfig {
     @Bean
