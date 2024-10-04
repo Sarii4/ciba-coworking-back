@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config.jwt;
+package com.cibacoworking.cibacoworking.security.jwt;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config.jwt;
+package com.cibacoworking.cibacoworking.security.jwt;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.cibacoworking.cibacoworking.services.UserServiceImpl;
+import com.cibacoworking.cibacoworking.security.CustomUserDetailsService;
 
 import org.springframework.lang.NonNull;
 import jakarta.servlet.FilterChain;
@@ -24,7 +24,7 @@ import lombok.AllArgsConstructor;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
-    private final UserServiceImpl userServiceImpl;
+    private final CustomUserDetailsService customUserDetailsService;
 
 @Override
 protected void doFilterInternal(
@@ -38,7 +38,7 @@ protected void doFilterInternal(
     if (token != null && StringUtils.hasText(token)) {
         String username = jwtUtil.extractUsername(token);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userServiceImpl.loadUserByUsername(username);
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
         if (jwtUtil.validateToken(token, userDetails)) {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

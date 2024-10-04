@@ -85,7 +85,7 @@ public class SpaceServiceImpl implements SpaceService {
             boolean isTableInactive = !checkTableStatus(reservation.getSpace().getId());
 
             if (isTableInactive) {
-               updateTableStatus(reservation.getSpace().getId(), "actiu");
+                updateTableStatus(reservation.getSpace().getId(), "actiu");
             }
         }
     }

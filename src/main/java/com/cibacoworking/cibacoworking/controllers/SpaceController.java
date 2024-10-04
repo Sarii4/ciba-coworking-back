@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cibacoworking.cibacoworking.config.ConstantsSecurity;
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
-import com.cibacoworking.cibacoworking.models.dtos.DateRangeRequestDTO;
 import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
 import com.cibacoworking.cibacoworking.models.dtos.SpaceDTO;
+import com.cibacoworking.cibacoworking.models.dtos.requests.DateRangeRequestDTO;
 import com.cibacoworking.cibacoworking.services.SpaceService;
 
 @RestController
@@ -24,7 +23,7 @@ public class SpaceController {
     private SpaceService spaceService;
 
     // Obtener todas las mesas disponibles con información de la mesa por fechas concretas
-    @GetMapping(ConstantsSecurity.GET_TABLES_BY_DATE)
+    @GetMapping(EndpointsConstants.GET_TABLES_BY_DATE)
     public ResponseEntity<List<SpaceDTO>> getAllAvailableTablesByDate(
             @RequestBody DateRangeRequestDTO dateRange) throws CibaCoworkingException {
         
@@ -37,7 +36,7 @@ public class SpaceController {
     }
 
     // Obtener todas las mesas con información de las reservas por fechas concretas
-    @GetMapping(ConstantsSecurity.GET_TABLES_BY_DATE_WITH_RESERVATIONS)
+    @GetMapping(EndpointsConstants.GET_TABLES_BY_DATE_WITH_RESERVATIONS)
     public ResponseEntity<List<ReservationDTO>> getTablesWithReservations(
             @RequestBody DateRangeRequestDTO dateRange) throws CibaCoworkingException {
         
@@ -48,7 +47,7 @@ public class SpaceController {
     }
 
     //Obtener detalles de un espacio por su id
-    @GetMapping(ConstantsSecurity.GET_SPACE_BY_ID)
+    @GetMapping(EndpointsConstants.GET_SPACE_BY_ID)
     public ResponseEntity<SpaceDTO> getSpaceById(@PathVariable int spaceId) {
         SpaceDTO spaceDTO = spaceService.getSpaceById(spaceId);
         return ResponseEntity.ok(spaceDTO);
