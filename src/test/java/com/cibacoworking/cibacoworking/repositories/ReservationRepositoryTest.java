@@ -79,18 +79,16 @@ public class ReservationRepositoryTest {
         reservation.setEndTime(LocalTime.of(12, 0,0));
         reservationRepository.save(reservation);
 
-        // Ejecutar el método
         List<Reservation> foundReservations = reservationRepository.findReservationsBySpaceAndDate(
                 Space.getId(), LocalDate.now(), LocalDate.now().plusDays(1));
 
-        // Verificar resultados
         assertThat(foundReservations).isNotEmpty();
         assertThat(foundReservations.get(0).getSpace().getId()).isEqualTo(Space.getId());
     }
 
     @Test
     public void testFindConflictingReservations() {
-        // Agregar reservas de prueba
+
         Reservation reservation1 = new Reservation();
         reservation1.setSpace(Space);
         reservation1.setUser(User);
@@ -105,22 +103,20 @@ public class ReservationRepositoryTest {
         reservation2.setUser(User);
         reservation2.setStartDate(LocalDate.now());
         reservation2.setEndDate(LocalDate.now().plusDays(1));
-        reservation2.setStartTime(LocalTime.of(11, 0,0)); // Superpone con reservation1
+        reservation2.setStartTime(LocalTime.of(11, 0,0)); 
         reservation2.setEndTime(LocalTime.of(13, 0,0));
         reservationRepository.save(reservation2);
 
-        // Ejecutar el método
         List<Reservation> conflictingReservations = reservationRepository.findConflictingReservations(
                 Space.getId(), LocalDate.now(), LocalDate.now().plusDays(1),
                 LocalTime.of(10, 0), LocalTime.of(12, 0,0));
 
-        // Verificar resultados
-        assertThat(conflictingReservations).isNotEmpty(); // Debería haber conflictos
+        assertThat(conflictingReservations).isNotEmpty(); 
     }
 
     @Test
     public void testFindByEndDateBefore() {
-        // Agregar una reserva de prueba
+
         Reservation reservation = new Reservation();
         reservation.setSpace(Space);
         reservation.setUser(User);
