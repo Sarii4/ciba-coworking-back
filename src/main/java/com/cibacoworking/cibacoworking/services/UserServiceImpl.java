@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    // crear un usuario(comprobar existencia mail)
+    // crear un usuario
     public UserDTO createUser(UserRegistrationRequestDTO userRegistrationDTO) throws CibaCoworkingException {
         if (isEmailAvailable(userRegistrationDTO.getEmail())) {
             if (!isPasswordFormatValid(userRegistrationDTO.getPassword())) {
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
             }
             try {
                 User user = dtoMapper.convertToEntity(userRegistrationDTO);
-                Optional<Role> role = roleRepository.findById(2); //CAMBIAR A 1 A LA HORA DE CREAR ADMIN Y VOLVER A PONER 2 DESPUES
+                Optional<Role> role = roleRepository.findById(2); 
                 Role userRole = role.get();
                 user.setRole(userRole);
                 user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
