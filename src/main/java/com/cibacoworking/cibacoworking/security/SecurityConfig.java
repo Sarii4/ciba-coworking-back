@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config;
+package com.cibacoworking.cibacoworking.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.cibacoworking.cibacoworking.config.jwt.JwtAuthenticationFilter;
-import com.cibacoworking.cibacoworking.services.UserServiceImpl;
+
+import com.cibacoworking.cibacoworking.security.jwt.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -47,7 +47,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder,
-            UserServiceImpl customUserDetailsService) {
+    CustomUserDetailsService customUserDetailsService) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(customUserDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);

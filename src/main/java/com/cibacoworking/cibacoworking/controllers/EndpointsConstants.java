@@ -1,6 +1,6 @@
-package com.cibacoworking.cibacoworking.config;
+package com.cibacoworking.cibacoworking.controllers;
 
-public class ConstantsSecurity {
+public class EndpointsConstants {
     //ENDPOINTS
 
     
