@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -20,17 +20,15 @@ import com.cibacoworking.cibacoworking.models.entities.Space;
 import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
 import com.cibacoworking.cibacoworking.repositories.SpaceRepository;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Service
 public class SpaceServiceImpl implements SpaceService {
 
-    @Autowired
-    private SpaceRepository spaceRepository;
-
-    @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private DTOMapper dtoMapper;
+    private final SpaceRepository spaceRepository;
+    private final ReservationRepository reservationRepository;
+    private final DTOMapper dtoMapper;
 
     // Obtener todas las mesas disponibles con información completa por fechas concretas   
     public List<SpaceDTO> getAllAvailableTablesByDate(LocalDate startDate, LocalDate endDate, LocalTime startTime,
@@ -77,18 +75,16 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     //Programar caducidad del status 'inactiu' de mesa individual
-    @Scheduled(cron = "0 0 0 * * ?") // Runs every day at midnight
+    @Scheduled(cron = "0 0 0 * * ?")
     public void updateExpiredReservations() throws CibaCoworkingException {
         LocalDate today = LocalDate.now();
 
-        // Fetch all expired reservations where endDate is before today
         List<Reservation> expiredReservations = reservationRepository.findByEndDateBefore(today);
 
         for (Reservation reservation : expiredReservations) {
             boolean isTableInactive = !checkTableStatus(reservation.getSpace().getId());
 
             if (isTableInactive) {
-                // Set the table status to "actiu"
                 updateTableStatus(reservation.getSpace().getId(), "actiu");
             }
         }

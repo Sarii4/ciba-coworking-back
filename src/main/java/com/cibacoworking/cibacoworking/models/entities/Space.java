@@ -1,7 +1,6 @@
 
 package com.cibacoworking.cibacoworking.models.entities;
 
-
 import java.util.List;
 
 import jakarta.persistence.CascadeType;

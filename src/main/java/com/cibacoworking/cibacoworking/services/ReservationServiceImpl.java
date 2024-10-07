@@ -6,29 +6,24 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.dtos.DTOMapper;
 import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
 import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.repositories.ReservationRepository;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private SpaceServiceImpl spaceService;
-
-    @Autowired
-    private DTOMapper dtoMapper;
+    private final ReservationRepository reservationRepository;
+    private final SpaceServiceImpl spaceService;
+    private final DTOMapper dtoMapper;
 
     // OBTENER RESERVAS
     // Obtener reservas por ID de espacio y fechas concretas
@@ -92,6 +87,8 @@ public class ReservationServiceImpl implements ReservationService {
 
         ReservationPastDateValidator(reservationDTO.getEndDate());
         ReservationYearValidator(reservationDTO.getEndDate());
+        validateOfficeReservationDuration(reservationDTO.getStartDate(),
+        reservationDTO.getEndDate());
 
         boolean isAvailable = isTableAvailable(reservationDTO.getSpaceDTO().getId(), reservationDTO.getStartDate(),
                 reservationDTO.getEndDate(), reservationDTO.getStartTime(), reservationDTO.getEndTime());
@@ -108,7 +105,6 @@ public class ReservationServiceImpl implements ReservationService {
             throw new CibaCoworkingException("Aquest espai ja està reservat per aquest periode.",
                     HttpStatus.BAD_REQUEST);
         }
-
     }
 
     // Crear una nueva reserva de mesas individuales por el usuario
@@ -118,7 +114,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         ReservationPastDateValidator(reservationDTO.getEndDate());
         ReservationYearValidator(reservationDTO.getEndDate());
-        validateReservationDuration(reservationDTO.getStartDate(), reservationDTO.getEndDate());
+        validateTableReservationDuration(reservationDTO.getStartDate(), reservationDTO.getEndDate());
 
         boolean isAvailable = isTableAvailable(reservationDTO.getSpaceDTO().getId(), reservationDTO.getStartDate(),
                 reservationDTO.getEndDate(), reservationDTO.getStartTime(), reservationDTO.getEndTime());
@@ -205,14 +201,24 @@ public class ReservationServiceImpl implements ReservationService {
                     HttpStatus.BAD_REQUEST);
         }
     }
-    // Validar que la duración de la reserva puede ser como máximo 7 días
-    public static void validateReservationDuration(LocalDate startDate, LocalDate endDate)
+    // Validar que la duración de la reserva de la mesa puede ser como máximo 7 días
+    public static void validateTableReservationDuration(LocalDate startDate, LocalDate endDate)
             throws CibaCoworkingException {
         long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
 
         if (daysBetween > 7) {
             throw new CibaCoworkingException(
                     "La reserva no pot ser per un període superior a 7 dies. Si necesites un període més llarg consulta a l'administrador",
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+    // Validar que la duración de la reserva de oficinas o sala tiene que ser hecha para un día sin permitir periodos
+    public static void validateOfficeReservationDuration(LocalDate startDate, LocalDate endDate)
+            throws CibaCoworkingException {
+
+        if (!startDate.equals(endDate)) {
+            throw new CibaCoworkingException(
+                    "La reserva només pot ser d´un día.",
                     HttpStatus.BAD_REQUEST);
         }
     }

@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cibacoworking.cibacoworking.config.ConstantsSecurity;
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
-import com.cibacoworking.cibacoworking.models.dtos.DateRangeRequestDTO;
 import com.cibacoworking.cibacoworking.models.dtos.ReservationDTO;
+import com.cibacoworking.cibacoworking.models.dtos.requests.DateRangeRequestDTO;
 import com.cibacoworking.cibacoworking.services.ReservationService;
 
 @RestController
@@ -28,7 +27,7 @@ public class ReservationController {
     // CREAR RESERVAS
 
     // Crear reserva mesas por el usuario
-    @PostMapping(ConstantsSecurity.CREATE_RESERVATION_TABLES_BY_USER)
+    @PostMapping(EndpointsConstants.CREATE_RESERVATION_TABLES_BY_USER)
     public ResponseEntity<ReservationDTO> createReservationTables(@RequestBody ReservationDTO reservationDTO)
             throws CibaCoworkingException {
         ReservationDTO savedReservation = reservationService.createReservationTablesByUser(reservationDTO);
@@ -36,7 +35,7 @@ public class ReservationController {
     }
 
     // Crear reserva oficinas y sala
-    @PostMapping(ConstantsSecurity.CREATE_RESERVATION_OFFICES)
+    @PostMapping(EndpointsConstants.CREATE_RESERVATION_OFFICES)
     public ResponseEntity<ReservationDTO> createReservationOffices(@RequestBody ReservationDTO reservationDTO)
             throws CibaCoworkingException {
         ReservationDTO savedReservation = reservationService.createReservationOffices(reservationDTO);
@@ -44,7 +43,7 @@ public class ReservationController {
     }
 
     // Crear reserva a largo plazo por administrador
-    @PostMapping(ConstantsSecurity.CREATE_LONG_TERM_RESERVATION_ADMIN)
+    @PostMapping(EndpointsConstants.CREATE_LONG_TERM_RESERVATION_ADMIN)
     public ResponseEntity<ReservationDTO> createLongTermReservation(
         @RequestBody ReservationDTO reservationDTO) throws CibaCoworkingException {
         ReservationDTO savedReservation = reservationService.createLongTermReservation(reservationDTO);
@@ -54,7 +53,7 @@ public class ReservationController {
     // VER RESERVAS
 
     // Obtener todas las reservas por id de usuario
-    @GetMapping(ConstantsSecurity.GET_RESERVATIONS_BY_USER)
+    @GetMapping(EndpointsConstants.GET_RESERVATIONS_BY_USER)
     public ResponseEntity<List<ReservationDTO>> getReservationsByUser(@PathVariable int userId)
             throws CibaCoworkingException {
         List<ReservationDTO> reservationDTOs = reservationService.getReservationsByUser(userId);
@@ -62,7 +61,7 @@ public class ReservationController {
     }
 
     // Obtener detalles de una reserva por id de reserva
-    @GetMapping(ConstantsSecurity.GET_RESERVATION_BY_ID)
+    @GetMapping(EndpointsConstants.GET_RESERVATION_BY_ID)
     public ResponseEntity<ReservationDTO> getReservationById(@PathVariable int reservationId)
             throws CibaCoworkingException {
         ReservationDTO reservationDTO = reservationService.getReservationById(reservationId);
@@ -70,7 +69,7 @@ public class ReservationController {
     }
 
     // Obtener reservas por ID de espacio y fechas concretas
-    @GetMapping(ConstantsSecurity.GET_RESERVATIONS_BY_SPACE_AND_DATE)
+    @PostMapping(EndpointsConstants.GET_RESERVATIONS_BY_SPACE_AND_DATE)
     public ResponseEntity<List<ReservationDTO>> getReservationsBySpaceAndDate(
             @PathVariable int spaceId,
             @RequestBody DateRangeRequestDTO dateRange) throws CibaCoworkingException {
@@ -81,7 +80,7 @@ public class ReservationController {
     }
 
     //ACTUALIZAR RESERVA
-    @PutMapping(ConstantsSecurity.UPDATE_RESERVATION)
+    @PutMapping(EndpointsConstants.UPDATE_RESERVATION)
     public ResponseEntity<ReservationDTO> updateReservation(
             @PathVariable int reservationId,
             @RequestBody ReservationDTO reservationDTO) throws CibaCoworkingException {
@@ -91,7 +90,7 @@ public class ReservationController {
     }
 
     // ELIMINAR RESERVA
-    @DeleteMapping(ConstantsSecurity.DELETE_RESERVATION)
+    @DeleteMapping(EndpointsConstants.DELETE_RESERVATION)
     public ResponseEntity<String> deleteReservation(@PathVariable int reservationId) throws CibaCoworkingException {
         reservationService.deleteReservation(reservationId);
         return ResponseEntity.ok("S'ha eliminat amb èxit");

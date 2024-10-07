@@ -12,12 +12,15 @@ import org.springframework.stereotype.Service;
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.dtos.DTOMapper;
 import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
-import com.cibacoworking.cibacoworking.models.dtos.UserRegistrationDTO;
+import com.cibacoworking.cibacoworking.models.dtos.requests.UserRegistrationRequestDTO;
 import com.cibacoworking.cibacoworking.models.entities.Role;
 import com.cibacoworking.cibacoworking.models.entities.User;
 import com.cibacoworking.cibacoworking.repositories.RoleRepository;
 import com.cibacoworking.cibacoworking.repositories.UserRepository;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -26,15 +29,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final DTOMapper dtoMapper;
 
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository,
-            RoleRepository roleRepository, DTOMapper dtoMapper, ReservationService reservationService) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.dtoMapper = dtoMapper;
-        System.out.println("PasswordEncoder injected: " + (passwordEncoder != null));
-    }
-
+    
     // Obtener todos usuarios para admin dashboard
     public List<UserDTO> getAllUsers() throws CibaCoworkingException {
         List<User> users = userRepository.findAll();
@@ -46,15 +41,15 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    // crear un usuario(comprobar existencia mail)
-    public UserDTO createUser(UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException {
+    // crear un usuario
+    public UserDTO createUser(UserRegistrationRequestDTO userRegistrationDTO) throws CibaCoworkingException {
         if (isEmailAvailable(userRegistrationDTO.getEmail())) {
             if (!isPasswordFormatValid(userRegistrationDTO.getPassword())) {
                 throw new CibaCoworkingException("La contrasenya ha de contenir 8 caràcters.", HttpStatus.BAD_REQUEST);
             }
             try {
                 User user = dtoMapper.convertToEntity(userRegistrationDTO);
-                Optional<Role> role = roleRepository.findById(1);
+                Optional<Role> role = roleRepository.findById(2); 
                 Role userRole = role.get();
                 user.setRole(userRole);
                 user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
@@ -78,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // editar usuario por id
-    public UserDTO updateUser(int id, UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException {
+    public UserDTO updateUser(int id, UserRegistrationRequestDTO userRegistrationDTO) throws CibaCoworkingException {
         Optional<User> userOpt = userRepository.findById(id);
         if (!userOpt.isPresent()) {
             throw new CibaCoworkingException("No s'ha trobat l'usuari per actualitzar", HttpStatus.NOT_FOUND);
