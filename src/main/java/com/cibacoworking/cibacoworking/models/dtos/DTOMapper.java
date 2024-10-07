@@ -1,5 +1,6 @@
 package com.cibacoworking.cibacoworking.models.dtos;
 
+import com.cibacoworking.cibacoworking.models.dtos.requests.UserRegistrationRequestDTO;
 import com.cibacoworking.cibacoworking.models.entities.Reservation;
 import com.cibacoworking.cibacoworking.models.entities.Space;
 import com.cibacoworking.cibacoworking.models.entities.User;
@@ -40,8 +41,8 @@ public class DTOMapper {
         return user;
     }
 
-    public UserRegistrationDTO convertToRegistrationDTO(User user) {
-        return new UserRegistrationDTO(
+    public UserRegistrationRequestDTO convertToRegistrationDTO(User user) {
+        return new UserRegistrationRequestDTO(
                 user.getName(),
                 user.getEmail(),
                 user.getPhone(),
@@ -49,7 +50,7 @@ public class DTOMapper {
                 user.getPassword());
     }
 
-    public User convertToEntity(UserRegistrationDTO userRegistrationDTO) {
+    public User convertToEntity(UserRegistrationRequestDTO userRegistrationDTO) {
         User user = new User();
         user.setName(userRegistrationDTO.getName());
         user.setEmail(userRegistrationDTO.getEmail());

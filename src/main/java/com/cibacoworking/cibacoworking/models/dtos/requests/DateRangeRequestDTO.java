@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.models.dtos;
+package com.cibacoworking.cibacoworking.models.dtos.requests;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

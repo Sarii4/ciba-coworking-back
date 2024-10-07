@@ -2,7 +2,13 @@ package com.cibacoworking.cibacoworking.exception;
 
 import org.springframework.http.HttpStatus;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CibaCoworkingException extends Exception {
+    
     private HttpStatus httpStatus;
 
     public CibaCoworkingException(String message) {
@@ -14,12 +20,5 @@ public class CibaCoworkingException extends Exception {
         this.httpStatus = httpStatus;
     }
 
-    public HttpStatus getHttpStatus() {
-        return this.httpStatus;
-    }
-
-    public void setHttpStatus(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
-    }
 
 }

@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.config.auth;
+package com.cibacoworking.cibacoworking.models.dtos.responses;
 
 import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 
-public class AuthResponse {
+public class AuthResponseDTO {
     private String token;
     private UserDTO userDTO;
 }
