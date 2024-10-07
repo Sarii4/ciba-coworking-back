@@ -1,4 +1,4 @@
-package com.cibacoworking.cibacoworking.models;
+package com.cibacoworking.cibacoworking.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
