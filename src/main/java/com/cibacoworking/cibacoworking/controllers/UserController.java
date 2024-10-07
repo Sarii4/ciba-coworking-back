@@ -1,7 +1,6 @@
 
 package com.cibacoworking.cibacoworking.controllers;
 
-
 import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
 import com.cibacoworking.cibacoworking.models.dtos.UserRegistrationDTO;
 import com.cibacoworking.cibacoworking.services.UserService;
@@ -21,7 +20,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-      
 
     @GetMapping(ConstantsSecurity.GET_ALL_USERS)
     public ResponseEntity<List<UserDTO>> getAllUsers() throws CibaCoworkingException {
@@ -36,19 +34,19 @@ public class UserController {
     }
 
     @PostMapping(ConstantsSecurity.CREATE_USER)
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserRegistrationDTO userRegistrationDTO) throws CibaCoworkingException {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserRegistrationDTO userRegistrationDTO)
+            throws CibaCoworkingException {
         UserDTO savedUser = userService.createUser(userRegistrationDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-       
+
     }
 
-   @DeleteMapping(ConstantsSecurity.DELETE_USER)
-   public ResponseEntity<String> deleteUser(@PathVariable int userId) throws CibaCoworkingException {
+    @DeleteMapping(ConstantsSecurity.DELETE_USER)
+    public ResponseEntity<String> deleteUser(@PathVariable int userId) throws CibaCoworkingException {
         userService.deleteUser(userId);
         return ResponseEntity.ok("S'ha eliminat amb èxit");
     }
 
-    
     @PutMapping(ConstantsSecurity.UPDATE_USER)
     public ResponseEntity<UserDTO> updateUser(
             @PathVariable int userId,

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import com.cibacoworking.cibacoworking.exception.CibaCoworkingException;
 import com.cibacoworking.cibacoworking.models.dtos.DTOMapper;
 import com.cibacoworking.cibacoworking.models.dtos.UserDTO;
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
             }
             try {
                 User user = dtoMapper.convertToEntity(userRegistrationDTO);
-                Optional<Role> role = roleRepository.findById(2);
+                Optional<Role> role = roleRepository.findById(1);
                 Role userRole = role.get();
                 user.setRole(userRole);
                 user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
