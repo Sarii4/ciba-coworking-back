@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class SpaceController {
     private SpaceService spaceService;
 
     // Obtener todas las mesas disponibles con información de la mesa por fechas concretas
-    @GetMapping(EndpointsConstants.GET_TABLES_BY_DATE)
+    @PostMapping(EndpointsConstants.GET_TABLES_BY_DATE)
     public ResponseEntity<List<SpaceDTO>> getAllAvailableTablesByDate(
             @RequestBody DateRangeRequestDTO dateRange) throws CibaCoworkingException {
         
@@ -36,7 +37,7 @@ public class SpaceController {
     }
 
     // Obtener todas las mesas con información de las reservas por fechas concretas
-    @GetMapping(EndpointsConstants.GET_TABLES_BY_DATE_WITH_RESERVATIONS)
+    @PostMapping(EndpointsConstants.GET_TABLES_BY_DATE_WITH_RESERVATIONS)
     public ResponseEntity<List<ReservationDTO>> getTablesWithReservations(
             @RequestBody DateRangeRequestDTO dateRange) throws CibaCoworkingException {
         
