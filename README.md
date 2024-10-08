@@ -30,36 +30,37 @@ This system is aimed at entrepreneurs, small businesses, and projects focused on
 - Implement a relational database.
 - Build data access components.
 - Develop a user interface with content management capabilities.
-
 ## 💻 Technologies Used
+
 ### Frontend:
-- React.js
-- HTML5
-- CSS3
-- Styled Components
-- Axios
+- [React.js](https://reactjs.org/)
+- [HTML5](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)
+- [CSS3](https://developer.mozilla.org/en-US/docs/Web/CSS)
+- [Styled Components](https://styled-components.com/)
+- [Axios](https://axios-http.com/)
 
 ### Backend:
-- Java
-- Spring Boot
-- Spring Security (JWT)
+- [Java](https://www.oracle.com/java/)
+- [Spring Boot](https://spring.io/projects/spring-boot)
+- [Spring Security (JWT)](https://spring.io/guides/tutorials/spring-security-and-angular-js/)
 
 ### Database:
-- PostgreSQL
+- [PostgreSQL](https://www.postgresql.org/)
 
 ### Testing:
-- Vitest
-- JUnit
-- Mockito
+- [Vitest](https://vitest.dev/)
+- [JUnit](https://junit.org/junit5/)
+- [Mockito](https://site.mockito.org/)
 
 ### Tools:
-- Figma
-- Visual Studio Code
-- Trello
-- Git, GitHub
-- Discord
-- PgAdmin
-- Postman
+- [Figma](https://www.figma.com/)
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Trello](https://trello.com/)
+- [Git](https://git-scm.com/), [GitHub](https://github.com/)
+- [Discord](https://discord.com/)
+- [PgAdmin](https://www.pgadmin.org/)
+- [Postman](https://www.postman.com/)
+
 
 ## 🎯 Functional Requirements
 - **User Authentication**: Users should be able to register and log in using email and password.
@@ -103,7 +104,7 @@ The user interface design follows Atomic Design methodology, allowing the creati
 - Visual development for both mobile and desktop.
 - Implementation of a responsive and modern design using Styled Components.
 
-## 🚀 Installation Guide 🔧
+## 🚀 Installation Guide 
 
 ### Prerequisites:
 - Node.js (v14+)
@@ -174,7 +175,7 @@ npm start
 5. Access the applications:
 Access the frontend application in your browser at http://localhost:3001.
 
-🤝 Contribution 🛠️
+## 🤝 Contribution 
 Contributions are welcome. Please follow these steps:
 
 Fork the project:
