@@ -69,7 +69,7 @@ public class ReservationController {
     }
 
     // Obtener reservas por ID de espacio y fechas concretas
-    @GetMapping(EndpointsConstants.GET_RESERVATIONS_BY_SPACE_AND_DATE)
+    @PostMapping(EndpointsConstants.GET_RESERVATIONS_BY_SPACE_AND_DATE)
     public ResponseEntity<List<ReservationDTO>> getReservationsBySpaceAndDate(
             @PathVariable int spaceId,
             @RequestBody DateRangeRequestDTO dateRange) throws CibaCoworkingException {
