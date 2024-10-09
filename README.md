@@ -119,43 +119,46 @@ The user interface design follows Atomic Design methodology, allowing the creati
 git clone https://github.com/castellanorn/ciba-coworking-front.git
 
 ```
----
 
-Backend:
+
+**Backend**:
 
 ```
 git clone https://github.com/Sarii4/ciba-coworking-back.git
 
 ```
+---
 
-2. Navigate to the project directories:
-Frontend:
+### 2. Navigate to the project directories:
+**Frontend**:
 
 ```
 cd ciba-coworking-front
 
 ```
-Backend:
+**Backend**:
 
 ```
 cd ciba-coworking-back
 
 ```
-3. Install the dependencies:
-Frontend:
+---
+### 3. Install the dependencies:
+**Frontend**:
 
 ```
 npm install
 
 ```
-Backend:
+**Backend**:
 
 ```
 ./mvnw install
 
 ```
+---
 
-4. Run the applications:
+### 4. Run the applications:
 Start the Backend server:
 
 ```
@@ -171,10 +174,10 @@ cd frontend
 npm start
 
 ```
-
-5. Access the applications:
+---
+### 5. Access the applications:
 Access the frontend application in your browser at http://localhost:3001.
-
+---
 ## 🤝 Contribution 
 Contributions are welcome. Please follow these steps:
 
@@ -205,8 +208,7 @@ git push origin feature/new-functionality
 
 Open a Pull Request: Once you've pushed the changes, open a Pull Request on GitHub to get them reviewed and merged.
 
-🙏🏼 Farewell
-Thank you for using and contributing to the Coworking Reservation System at La CIBA. Your input helps foster a collaborative and innovative workspace, promoting equal opportunities for all.
+
 
 
 
