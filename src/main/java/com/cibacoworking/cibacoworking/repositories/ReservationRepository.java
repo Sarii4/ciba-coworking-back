@@ -14,33 +14,34 @@ import com.cibacoworking.cibacoworking.models.entities.Reservation;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
-    List<Reservation> findByUserId(int userId);
+        List<Reservation> findByUserId(int userId);
 
-    @Query("SELECT r FROM Reservation r " +
-            "WHERE r.space.id = :spaceId " +
-            "AND r.startDate >= :startDate " +
-            "AND r.endDate <= :endDate")
-    List<Reservation> findReservationsBySpaceAndDate(
-            @Param("spaceId") int spaceId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate);
+        @Query("SELECT r FROM Reservation r " +
+                        "WHERE r.space.id = :spaceId " +
+                        "AND r.startDate >= :startDate " +
+                        "AND r.endDate <= :endDate")
+        List<Reservation> findReservationsBySpaceAndDate(
+                        @Param("spaceId") int spaceId,
+                        @Param("startDate") LocalDate startDate,
+                        @Param("endDate") LocalDate endDate);
 
-    @Query("SELECT r FROM Reservation r " +
-            "WHERE r.space.id = :spaceId " +
-            "AND ( " +
-            "     (r.startDate BETWEEN :startDate AND :endDate) " +
-            "     OR " +
-            "     (r.endDate BETWEEN :startDate AND :endDate) " +
-            "     OR " +
-            "     (:startDate BETWEEN r.startDate AND r.endDate AND :endDate BETWEEN r.startDate AND r.endDate) " +
-            ") " +
-            "AND (r.startTime < :endTime AND r.endTime > :startTime)")
-    List<Reservation> findConflictingReservations(
-            @Param("spaceId") int spaceId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            @Param("startTime") LocalTime startTime,
-            @Param("endTime") LocalTime endTime);
+        @Query("SELECT r FROM Reservation r " +
+                        "WHERE r.space.id = :spaceId " +
+                        "AND ( " +
+                        "     (r.startDate BETWEEN :startDate AND :endDate) " +
+                        "     OR " +
+                        "     (r.endDate BETWEEN :startDate AND :endDate) " +
+                        "     OR " +
+                        "     (:startDate BETWEEN r.startDate AND r.endDate AND :endDate BETWEEN r.startDate AND r.endDate) "
+                        +
+                        ") " +
+                        "AND (r.startTime < :endTime AND r.endTime > :startTime)")
+        List<Reservation> findConflictingReservations(
+                        @Param("spaceId") int spaceId,
+                        @Param("startDate") LocalDate startDate,
+                        @Param("endDate") LocalDate endDate,
+                        @Param("startTime") LocalTime startTime,
+                        @Param("endTime") LocalTime endTime);
 
-    List<Reservation> findByEndDateBefore(LocalDate date);
+        List<Reservation> findByEndDateBefore(LocalDate date);
 }
