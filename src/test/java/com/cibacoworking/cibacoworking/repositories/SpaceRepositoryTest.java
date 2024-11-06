@@ -48,8 +48,8 @@ public class SpaceRepositoryTest {
     void testFindAvailableTablesByDate() {
         LocalDate startDate = LocalDate.of(2024, 10, 1);
         LocalDate endDate = LocalDate.of(2024, 10, 10);
-        LocalTime startTime = LocalTime.of(9, 0);
-        LocalTime endTime = LocalTime.of(17, 0);
+        LocalTime startTime = LocalTime.of(8, 0,0);
+        LocalTime endTime = LocalTime.of(13, 59,59);
 
         Space space1 = new Space();
         space1.setId(4);
